@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Независимый технадзор — руководитель проекта строительство (аутсорсинг)</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #EAE4D2;
+    color: #101314;
+    line-height: 1.6;
+  }
+  .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+  /* Top bar */
+  .top-bar {
+    background: #0A67B0;
+    color: #EAE4D2;
+    font-size: 0.85rem;
+    padding: 8px 0;
+  }
+  .top-bar .container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+  }
+  .top-bar a {
+    color: #EAE4D2;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .top-bar a:hover { color: #AEAF3D; }
+  .top-bar span { opacity: 0.7; }
+
+  /* Header */
+  header {
+    background: #105288;
+    padding: 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    color: #EAE4D2;
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .logo span { color: #AEAF3D; }
+  nav a {
+    color: #EAE4D2;
+    text-decoration: none;
+    margin-left: 32px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  nav a:hover { color: #AEAF3D; }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #105288 0%, #0A67B0 100%);
+    color: #EAE4D2;
+    padding: 100px 0 120px;
+    text-align: center;
+  }
+  .hero h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 16px;
+  }
+  .hero h1 span { color: #AEAF3D; }
+  .hero p {
+    font-size: 1.2rem;
+    max-width: 640px;
+    margin: 0 auto 56px;
+    opacity: 0.9;
+  }
+  .btn {
+    display: inline-block;
+    background: #AEAF3D;
+    color: #101314;
+    padding: 14px 40px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(174, 175, 61, 0.4);
+  }
+
+  /* Split choice */
+  .split-choice {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .choice-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(234, 228, 210, 0.1);
+    border: 2px solid rgba(234, 228, 210, 0.25);
+    border-radius: 16px;
+    padding: 40px 32px;
+    text-decoration: none;
+    color: #EAE4D2;
+    transition: transform 0.2s, background 0.2s, border-color 0.2s;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+  }
+  .choice-card:hover {
+    transform: translateY(-4px);
+    background: rgba(234, 228, 210, 0.18);
+    border-color: #AEAF3D;
+  }
+  .choice-card .icon {
+    font-size: 2.5rem;
+    margin-bottom: 16px;
+  }
+  .choice-card .label {
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+  .choice-card .sub {
+    font-size: 0.9rem;
+    opacity: 0.7;
+    margin-top: 6px;
+  }
+
+  /* Sections */
+  section { padding: 96px 0; }
+  section:nth-child(even) { background: #EAE4D2; }
+
+  .section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 56px;
+    color: #105288;
+  }
+  .section-title span { color: #AEAF3D; }
+
+  /* Features */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 32px;
+  }
+  .feature-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px 32px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+  }
+  .feature-icon {
+    width: 56px;
+    height: 56px;
+    background: #0A67B0;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: #EAE4D2;
+  }
+  .feature-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    color: #105288;
+  }
+  .feature-card p { color: #101314; opacity: 0.8; }
+
+  /* CTA */
+  .cta {
+    background: #105288;
+    color: #EAE4D2;
+    text-align: center;
+  }
+  .cta h2 { font-size: 2rem; margin-bottom: 12px; }
+  .cta p { opacity: 0.85; margin-bottom: 16px; font-size: 1.05rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+  .cta .note { opacity: 0.6; font-size: 0.9rem; margin-top: 24px; }
+
+  .contact-form {
+    max-width: 520px;
+    margin: 32px auto 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .contact-form input,
+  .contact-form textarea {
+    width: 100%;
+    padding: 14px 18px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(234, 228, 210, 0.12);
+    color: #EAE4D2;
+    font-size: 1rem;
+    font-family: inherit;
+    outline: none;
+    transition: background 0.2s;
+  }
+  .contact-form input::placeholder,
+  .contact-form textarea::placeholder { color: rgba(234, 228, 210, 0.5); }
+  .contact-form input:focus,
+  .contact-form textarea:focus { background: rgba(234, 228, 210, 0.2); }
+  .contact-form textarea { min-height: 100px; resize: vertical; }
+  .contact-form .btn { width: 100%; cursor: pointer; border: none; }
+
+  /* Footer */
+  footer {
+    background: #101314;
+    color: #EAE4D2;
+    text-align: center;
+    padding: 32px 0;
+    opacity: 0.7;
+    font-size: 0.9rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="container">
+    <a href="tel:+79053198257">+7 (905) 319-82-57</a>
+    <span>|</span>
+    <a href="mailto:tim-test@yandex.ru">tim-test@yandex.ru</a>
+    <span>|</span>
+    <span>Казань, Республика Татарстан</span>
+  </div>
+</div>
+
+<header>
+  <div class="container">
+    <div class="logo"><span>Н</span>езависимый технадзор</div>
+    <nav>
+      <a href="about.html">О нас</a>
+      <a href="#features">Услуги</a>
+      <a href="#cta">Контакты</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <h1>Независимое сопровождение<br><span>строительства, ремонта</span><br>и реконструкции</h1>
+    <p>Стройте с профессионалами — без лишних комиссий и переплат</p>
+    <div class="split-choice">
+      <a href="physical.html" class="choice-card">
+        <div class="icon">&#128100;</div>
+        <div class="label">Вы Физическое лицо</div>
+        <div class="sub">Частный заказчик</div>
+      </a>
+      <a href="legal.html" class="choice-card">
+        <div class="icon">&#127970;</div>
+        <div class="label">Вы Юридическое лицо</div>
+        <div class="sub">Компания или ИП</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="container">
+    <h2 class="section-title">Наши <span>услуги</span></h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">&#128200;</div>
+        <h3>Технический надзор</h3>
+        <p>Независимый контроль качества строительных работ на всех этапах — от фундамента до отделки.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#128196;</div>
+        <h3>Управление проектом</h3>
+        <p>Полное ведение строительного проекта: планирование, координация подрядчиков, документация.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#128737;</div>
+        <h3>Аутсорсинг руководителя</h3>
+        <p>Внешний руководитель проекта строительство — экономьте на штатной единице без потери качества.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cta" class="cta">
+  <div class="container">
+    <h2>Оставьте заявку</h2>
+    <p>Расскажите кратко о вашем проекте — мы изучим задачу и свяжемся с вами, чтобы обсудить возможные решения и формат работы.</p>
+    <form class="contact-form">
+      <input type="text" placeholder="Ваше имя" required>
+      <input type="tel" placeholder="Номер телефона" required>
+      <textarea placeholder="Краткое описание проекта"></textarea>
+      <button type="submit" class="btn">&#128073; Оставить заявку на консультацию</button>
+    </form>
+    <p class="note">Мы обязательно свяжемся с вами в ближайшее время.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    &copy; 2026 Независимый технадзор. Все права защищены.
+  </div>
+</footer>
+
+</body>
+</html>
