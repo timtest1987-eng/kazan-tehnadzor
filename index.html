@@ -9,7 +9,13 @@
   html { scroll-behavior: smooth; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #EAE4D2;
+    background: #fff;
+    background-image:
+      linear-gradient(rgba(0,0,0,0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,0,0,0.07) 1px, transparent 1px),
+      linear-gradient(rgba(0,0,0,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,0,0,0.025) 1px, transparent 1px);
+    background-size: 40px 40px, 40px 40px, 8px 8px, 8px 8px;
     color: #101314;
     line-height: 1.6;
   }
@@ -153,8 +159,8 @@
   }
 
   /* Sections */
-  section { padding: 96px 0; }
-  section:nth-child(even) { background: #EAE4D2; }
+  section { padding: 96px 0; background: rgba(234, 228, 210, 0.85); }
+  section:nth-child(even) { background: rgba(234, 228, 210, 0.92); }
 
   .section-title {
     font-size: 2rem;
@@ -363,6 +369,7 @@
     <form class="contact-form" id="contactForm">
       <input type="text" name="name" placeholder="Ваше имя" required>
       <input type="tel" name="phone" placeholder="Номер телефона" required>
+      <input type="email" name="email" placeholder="Ваш e-mail" required>
       <textarea name="message" placeholder="Краткое описание проекта"></textarea>
       <input type="file" name="attachment" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.zip,.rar,.xls,.xlsx">
       <button type="submit" class="btn" id="submitBtn">&#128073; Оставить заявку на консультацию</button>
@@ -390,11 +397,13 @@ form.addEventListener('submit', async (e) => {
 
   const name = form.name.value.trim();
   const phone = form.phone.value.trim();
+  const email = form.email.value.trim();
   const message = form.message.value.trim();
   const file = form.attachment.files[0];
 
+  const text = `&#9989; Новая заявка с сайта%0A%0A&#128100; Имя: ${encodeURIComponent(name)}%0A&#128222; Телефон: ${encodeURIComponent(phone)}%0A&#9993; E-mail: ${encodeURIComponent(email)}%0A&#128221; Проект: ${encodeURIComponent(message || 'не указан')}`;
+
   try {
-    const text = `&#9989; Новая заявка с сайта%0A%0A&#128100; Имя: ${encodeURIComponent(name)}%0A&#128222; Телефон: ${encodeURIComponent(phone)}%0A&#128221; Проект: ${encodeURIComponent(message || 'не указан')}`;
     await fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${text}&parse_mode=HTML`);
 
     if (file) {
