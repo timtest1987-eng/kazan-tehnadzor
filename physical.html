@@ -161,7 +161,51 @@
     padding: 80px 0;
   }
   .cta h2 { font-size: 2rem; margin-bottom: 12px; }
-  .cta p { opacity: 0.85; margin-bottom: 32px; font-size: 1.1rem; }
+  .cta p { opacity: 0.85; margin-bottom: 16px; font-size: 1.05rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+  .cta .note { opacity: 0.6; font-size: 0.9rem; margin-top: 24px; }
+
+  .contact-form {
+    max-width: 520px;
+    margin: 32px auto 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .contact-form input,
+  .contact-form textarea {
+    width: 100%;
+    padding: 14px 18px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(234, 228, 210, 0.12);
+    color: #EAE4D2;
+    font-size: 1rem;
+    font-family: inherit;
+    outline: none;
+    transition: background 0.2s;
+  }
+  .contact-form input::placeholder,
+  .contact-form textarea::placeholder { color: rgba(234, 228, 210, 0.5); }
+  .contact-form input:focus,
+  .contact-form textarea:focus { background: rgba(234, 228, 210, 0.2); }
+  .contact-form textarea { min-height: 100px; resize: vertical; }
+  .contact-form .btn { width: 100%; cursor: pointer; border: none; }
+  .contact-form input[type="file"] {
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    background: rgba(234, 228, 210, 0.08);
+  }
+  .contact-form input[type="file"]::file-selector-button {
+    background: #AEAF3D;
+    color: #101314;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    margin-right: 12px;
+  }
   .btn {
     display: inline-block;
     background: #AEAF3D;
@@ -487,8 +531,16 @@
 <section class="cta">
   <div class="container">
     <h2>Оставьте заявку</h2>
-    <p>Мы посмотрим ваш проект и покажем, где можно сэкономить и избежать лишних расходов ещё до начала работ.</p>
-    <a href="#" class="btn">Связаться</a>
+    <p>Расскажите кратко о вашем проекте — мы изучим задачу и свяжемся с вами, чтобы обсудить возможные решения и формат работы.</p>
+    <form class="contact-form" id="contactForm">
+      <input type="text" name="name" placeholder="Ваше имя" required>
+      <input type="tel" name="phone" placeholder="Номер телефона" required>
+      <input type="email" name="email" placeholder="Ваш e-mail" required>
+      <textarea name="message" placeholder="Краткое описание проекта"></textarea>
+      <input type="file" name="attachment" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.zip,.rar,.xls,.xlsx">
+      <button type="submit" class="btn" id="submitBtn">&#128073; Оставить заявку на консультацию</button>
+    </form>
+    <p class="note">Мы обязательно свяжемся с вами в ближайшее время.</p>
   </div>
 </section>
 
@@ -498,5 +550,43 @@
   </div>
 </footer>
 
-</body>
-</html>
+<script>
+const form = document.getElementById('contactForm');
+const btn = document.getElementById('submitBtn');
+const botToken = '8525239619:AAFL9xNHCS9jLYj2QVcFlABngXwmX0g_hL8';
+const chatId = '1435755028';
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  btn.textContent = 'Отправка...';
+  btn.disabled = true;
+
+  const name = form.name.value.trim();
+  const phone = form.phone.value.trim();
+  const email = form.email.value.trim();
+  const message = form.message.value.trim();
+  const file = form.attachment.files[0];
+
+  const text = `&#9989; Новая заявка с сайта (физлица)%0A%0A&#128100; Имя: ${encodeURIComponent(name)}%0A&#128222; Телефон: ${encodeURIComponent(phone)}%0A&#9993; E-mail: ${encodeURIComponent(email)}%0A&#128221; Проект: ${encodeURIComponent(message || 'не указан')}`;
+
+  await fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${text}&parse_mode=HTML`);
+
+  if (file) {
+    const fd = new FormData();
+    fd.append('chat_id', chatId);
+    fd.append('document', file);
+    fd.append('caption', `Файл от ${name} (${phone})`);
+    await fetch(`https://api.telegram.org/bot${botToken}/sendDocument`, { method: 'POST', body: fd }).catch(() => {});
+  }
+
+  const fdEmail = new FormData();
+  fdEmail.append('name', name);
+  fdEmail.append('phone', phone);
+  fdEmail.append('email', email);
+  fdEmail.append('message', message);
+  fdEmail.append('_subject', 'Заявка с сайта технадзора (физлица)');
+  navigator.sendBeacon('https://formsubmit.co/tim-test@yandex.ru', fdEmail);
+
+  form.innerHTML = '<p style="font-size:1.2rem;color:#AEAF3D;font-weight:700;">&#9989; Спасибо! Заявка отправлена. Мы свяжемся с вами в ближайшее время.</p>';
+});
+</script>
