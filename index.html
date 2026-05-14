@@ -403,23 +403,25 @@ form.addEventListener('submit', async (e) => {
 
   const text = `&#9989; Новая заявка с сайта%0A%0A&#128100; Имя: ${encodeURIComponent(name)}%0A&#128222; Телефон: ${encodeURIComponent(phone)}%0A&#9993; E-mail: ${encodeURIComponent(email)}%0A&#128221; Проект: ${encodeURIComponent(message || 'не указан')}`;
 
-  try {
-    await fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${text}&parse_mode=HTML`);
+  // Telegram (основной канал)
+  await fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${text}&parse_mode=HTML`);
 
-    if (file) {
-      const fd = new FormData();
-      fd.append('chat_id', chatId);
-      fd.append('document', file);
-      fd.append('caption', `Файл от ${name} (${phone})`);
-      await fetch(`https://api.telegram.org/bot${botToken}/sendDocument`, { method: 'POST', body: fd });
-    }
-
-    form.innerHTML = '<p style="font-size:1.2rem;color:#AEAF3D;font-weight:700;">&#9989; Спасибо! Заявка отправлена. Мы свяжемся с вами в ближайшее время.</p>';
-  } catch {
-    btn.textContent = '&#128073; Оставить заявку на консультацию';
-    btn.disabled = false;
-    alert('Ошибка отправки. Попробуйте ещё раз или напишите нам в Telegram.');
+  if (file) {
+    const fd = new FormData();
+    fd.append('chat_id', chatId);
+    fd.append('document', file);
+    fd.append('caption', `Файл от ${name} (${phone})`);
+    await fetch(`https://api.telegram.org/bot${botToken}/sendDocument`, { method: 'POST', body: fd }).catch(() => {});
   }
+
+  // Email (дублирование, если не заблокировано)
+  fetch('https://formsubmit.co/ajax/tim-test@yandex.ru', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({ name, phone, email, message, _subject: 'Заявка с сайта технадзора' })
+  }).catch(() => {});
+
+  form.innerHTML = '<p style="font-size:1.2rem;color:#AEAF3D;font-weight:700;">&#9989; Спасибо! Заявка отправлена. Мы свяжемся с вами в ближайшее время.</p>';
 });
 </script>
 
