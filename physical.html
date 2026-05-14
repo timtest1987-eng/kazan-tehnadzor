@@ -214,10 +214,24 @@
     opacity: 0.9;
   }
 
-  @media (max-width: 600px) {
-    .hero h1 { font-size: 2rem; }
-    .content h2 { font-size: 1.5rem; }
-    .result-box { padding: 24px; }
+  @media (max-width: 768px) {
+    .container { padding: 0 16px; }
+    section.content { padding: 40px 0; }
+    .hero { padding: 48px 0 40px; }
+    .hero h1 { font-size: 1.8rem; }
+    .hero p { font-size: 1rem; }
+    .content h2 { font-size: 1.4rem; margin-top: 40px; }
+    .content h3 { font-size: 1.1rem; }
+    .content p, .content li { font-size: 0.95rem; }
+    .result-box { padding: 20px; }
+    .price-amount { font-size: 2.2rem; }
+    .price-block { padding: 28px 20px; }
+    .cta h2 { font-size: 1.5rem; }
+    .cta p { font-size: 0.95rem; }
+    .cta { padding: 48px 0; }
+    header .container { flex-direction: column; gap: 8px; }
+    .top-bar .container { font-size: 0.8rem; gap: 4px 12px; }
+    .btn { padding: 12px 28px; font-size: 0.95rem; }
   }
 </style>
 </head>

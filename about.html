@@ -128,9 +128,18 @@
     font-size: 0.9rem;
   }
 
-  @media (max-width: 600px) {
-    .hero h1 { font-size: 2rem; }
-    .stats { grid-template-columns: 1fr; }
+  @media (max-width: 768px) {
+    .container { padding: 0 16px; }
+    section.content { padding: 40px 0; }
+    .hero { padding: 48px 0 40px; }
+    .hero h1 { font-size: 1.8rem; }
+    .content p { font-size: 1rem; }
+    .stats { grid-template-columns: 1fr; gap: 16px; }
+    .stat-card { padding: 24px 16px; }
+    .stat-number { font-size: 1.8rem; }
+    .about-quote { font-size: 1rem; padding: 16px 20px; }
+    header .container { flex-direction: column; gap: 8px; }
+    .top-bar .container { font-size: 0.8rem; gap: 4px 12px; }
   }
 </style>
 </head>
