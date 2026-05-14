@@ -360,14 +360,12 @@
   <div class="container">
     <h2>Оставьте заявку</h2>
     <p>Расскажите кратко о вашем проекте — мы изучим задачу и свяжемся с вами, чтобы обсудить возможные решения и формат работы.</p>
-    <form class="contact-form" action="https://formsubmit.co/tim-test@yandex.ru" method="POST" enctype="multipart/form-data">
-      <input type="hidden" name="_captcha" value="false">
-      <input type="hidden" name="_subject" value="Заявка с сайта технадзора">
+    <form class="contact-form" id="contactForm">
       <input type="text" name="name" placeholder="Ваше имя" required>
       <input type="tel" name="phone" placeholder="Номер телефона" required>
       <textarea name="message" placeholder="Краткое описание проекта"></textarea>
       <input type="file" name="attachment" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.zip,.rar,.xls,.xlsx">
-      <button type="submit" class="btn">&#128073; Оставить заявку на консультацию</button>
+      <button type="submit" class="btn" id="submitBtn">&#128073; Оставить заявку на консультацию</button>
     </form>
     <p class="note">Мы обязательно свяжемся с вами в ближайшее время.</p>
   </div>
@@ -378,6 +376,43 @@
     &copy; 2026 Независимый технадзор. Все права защищены.
   </div>
 </footer>
+
+<script>
+const form = document.getElementById('contactForm');
+const btn = document.getElementById('submitBtn');
+const botToken = '8525239619:AAFL9xNHCS9jLYj2QVcFlABngXwmX0g_hL8';
+const chatId = '1435755028';
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  btn.textContent = 'Отправка...';
+  btn.disabled = true;
+
+  const name = form.name.value.trim();
+  const phone = form.phone.value.trim();
+  const message = form.message.value.trim();
+  const file = form.attachment.files[0];
+
+  try {
+    const text = `&#9989; Новая заявка с сайта%0A%0A&#128100; Имя: ${encodeURIComponent(name)}%0A&#128222; Телефон: ${encodeURIComponent(phone)}%0A&#128221; Проект: ${encodeURIComponent(message || 'не указан')}`;
+    await fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${text}&parse_mode=HTML`);
+
+    if (file) {
+      const fd = new FormData();
+      fd.append('chat_id', chatId);
+      fd.append('document', file);
+      fd.append('caption', `Файл от ${name} (${phone})`);
+      await fetch(`https://api.telegram.org/bot${botToken}/sendDocument`, { method: 'POST', body: fd });
+    }
+
+    form.innerHTML = '<p style="font-size:1.2rem;color:#AEAF3D;font-weight:700;">&#9989; Спасибо! Заявка отправлена. Мы свяжемся с вами в ближайшее время.</p>';
+  } catch {
+    btn.textContent = '&#128073; Оставить заявку на консультацию';
+    btn.disabled = false;
+    alert('Ошибка отправки. Попробуйте ещё раз или напишите нам в Telegram.');
+  }
+});
+</script>
 
 </body>
 </html>
