@@ -86,6 +86,14 @@
     margin: 0 auto 56px;
     opacity: 0.9;
   }
+  .hero .hero-accent {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #AEAF3D;
+    margin: -40px auto 40px;
+    max-width: 640px;
+    letter-spacing: 0.02em;
+  }
   .btn {
     display: inline-block;
     background: #AEAF3D;
@@ -229,6 +237,22 @@
   .contact-form textarea:focus { background: rgba(234, 228, 210, 0.2); }
   .contact-form textarea { min-height: 100px; resize: vertical; }
   .contact-form .btn { width: 100%; cursor: pointer; border: none; }
+  .contact-form input[type="file"] {
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    background: rgba(234, 228, 210, 0.08);
+  }
+  .contact-form input[type="file"]::file-selector-button {
+    background: #AEAF3D;
+    color: #101314;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    margin-right: 12px;
+  }
 
   /* Footer */
   footer {
@@ -246,6 +270,7 @@
     .hero { padding: 60px 0 72px; }
     .hero h1 { font-size: 1.8rem; }
     .hero p { font-size: 1rem; }
+    .hero .hero-accent { font-size: 0.95rem; margin: -28px auto 28px; }
     .split-choice { grid-template-columns: 1fr; gap: 16px; }
     .choice-card { padding: 28px 20px; }
     .choice-card .icon { font-size: 2rem; }
@@ -292,6 +317,7 @@
   <div class="container">
     <h1>Независимое сопровождение<br><span>строительства, ремонта</span><br>и реконструкции</h1>
     <p>Стройте с профессионалами — без лишних комиссий и переплат</p>
+    <p class="hero-accent">Независимый технадзор и руководитель проекта (аутсорсинг)</p>
     <div class="split-choice">
       <a href="physical.html" class="choice-card">
         <div class="icon">&#128100;</div>
@@ -323,8 +349,8 @@
       </div>
       <div class="feature-card">
         <div class="feature-icon">&#128737;</div>
-        <h3>Аутсорсинг руководителя</h3>
-        <p>Внешний руководитель проекта строительство — экономьте на штатной единице без потери качества.</p>
+        <h3>Руководитель проекта на аутсорсинге</h3>
+        <p>Внешний руководитель проекта строительства — экономьте на штатной единице без потери качества.</p>
       </div>
     </div>
   </div>
@@ -334,10 +360,13 @@
   <div class="container">
     <h2>Оставьте заявку</h2>
     <p>Расскажите кратко о вашем проекте — мы изучим задачу и свяжемся с вами, чтобы обсудить возможные решения и формат работы.</p>
-    <form class="contact-form">
-      <input type="text" placeholder="Ваше имя" required>
-      <input type="tel" placeholder="Номер телефона" required>
-      <textarea placeholder="Краткое описание проекта"></textarea>
+    <form class="contact-form" action="https://formsubmit.co/tim-test@yandex.ru" method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_subject" value="Заявка с сайта технадзора">
+      <input type="text" name="name" placeholder="Ваше имя" required>
+      <input type="tel" name="phone" placeholder="Номер телефона" required>
+      <textarea name="message" placeholder="Краткое описание проекта"></textarea>
+      <input type="file" name="attachment" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.zip,.rar,.xls,.xlsx">
       <button type="submit" class="btn">&#128073; Оставить заявку на консультацию</button>
     </form>
     <p class="note">Мы обязательно свяжемся с вами в ближайшее время.</p>
