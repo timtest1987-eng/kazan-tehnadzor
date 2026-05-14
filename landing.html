@@ -11,15 +11,28 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: #fff;
     background-image:
-      linear-gradient(rgba(0,0,0,0.07) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,0,0,0.07) 1px, transparent 1px),
-      linear-gradient(rgba(0,0,0,0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,0,0,0.025) 1px, transparent 1px);
+      linear-gradient(#ccc 1px, transparent 1px),
+      linear-gradient(90deg, #ccc 1px, transparent 1px),
+      linear-gradient(#e5e5e5 1px, transparent 1px),
+      linear-gradient(90deg, #e5e5e5 1px, transparent 1px);
     background-size: 40px 40px, 40px 40px, 8px 8px, 8px 8px;
     color: #101314;
     line-height: 1.6;
   }
   .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+  /* Blueprint accent lines */
+  .blueprint-line {
+    position: relative;
+    overflow: hidden;
+  }
+  .blueprint-line::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: repeating-linear-gradient(90deg, #105288 0, #105288 20px, transparent 20px, transparent 30px);
+  }
 
   /* Top bar */
   .top-bar {
@@ -414,12 +427,14 @@ form.addEventListener('submit', async (e) => {
     await fetch(`https://api.telegram.org/bot${botToken}/sendDocument`, { method: 'POST', body: fd }).catch(() => {});
   }
 
-  // Email (дублирование, если не заблокировано)
-  fetch('https://formsubmit.co/ajax/tim-test@yandex.ru', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify({ name, phone, email, message, _subject: 'Заявка с сайта технадзора' })
-  }).catch(() => {});
+  // Email (дублирование в фоне)
+  const fdEmail = new FormData();
+  fdEmail.append('name', name);
+  fdEmail.append('phone', phone);
+  fdEmail.append('email', email);
+  fdEmail.append('message', message);
+  fdEmail.append('_subject', 'Заявка с сайта технадзора');
+  navigator.sendBeacon('https://formsubmit.co/tim-test@yandex.ru', fdEmail);
 
   form.innerHTML = '<p style="font-size:1.2rem;color:#AEAF3D;font-weight:700;">&#9989; Спасибо! Заявка отправлена. Мы свяжемся с вами в ближайшее время.</p>';
 });
