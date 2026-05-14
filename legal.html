@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Юридическим лицам — Независимый технадзор</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #EAE4D2;
+    color: #101314;
+    line-height: 1.7;
+  }
+  .container { max-width: 820px; margin: 0 auto; padding: 0 24px; }
+
+  .top-bar {
+    background: #0A67B0;
+    color: #EAE4D2;
+    font-size: 0.85rem;
+    padding: 8px 0;
+  }
+  .top-bar .container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+  }
+  .top-bar a { color: #EAE4D2; text-decoration: none; transition: color 0.2s; }
+  .top-bar a:hover { color: #AEAF3D; }
+  .top-bar span { opacity: 0.7; }
+
+  header {
+    background: #105288;
+    padding: 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    color: #EAE4D2;
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+  }
+  .logo span { color: #AEAF3D; }
+  .back-link {
+    color: #EAE4D2;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: #AEAF3D; }
+
+  .hero {
+    background: linear-gradient(135deg, #105288 0%, #0A67B0 100%);
+    color: #EAE4D2;
+    padding: 80px 0 72px;
+    text-align: center;
+  }
+  .hero h1 {
+    font-size: 2.6rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 12px;
+  }
+  .hero h1 span { color: #AEAF3D; }
+  .hero p {
+    font-size: 1.15rem;
+    max-width: 600px;
+    margin: 0 auto;
+    opacity: 0.9;
+  }
+
+  .content { padding: 72px 0; }
+  .content h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #105288;
+    margin-top: 64px;
+    margin-bottom: 20px;
+  }
+  .content h2:first-child { margin-top: 0; }
+  .content h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0A67B0;
+    margin-top: 40px;
+    margin-bottom: 12px;
+  }
+  .content p { margin-bottom: 16px; font-size: 1.05rem; }
+  .content ul, .content ol { margin: 12px 0 24px 24px; }
+  .content li { margin-bottom: 8px; font-size: 1.05rem; }
+  .content hr {
+    border: none;
+    border-top: 2px solid #AEAF3D;
+    margin: 48px 0;
+    opacity: 0.5;
+  }
+  .content blockquote {
+    border-left: 4px solid #AEAF3D;
+    background: rgba(174, 175, 61, 0.1);
+    padding: 20px 24px;
+    margin: 24px 0;
+    border-radius: 0 8px 8px 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #105288;
+  }
+
+  .result-box {
+    background: #105288;
+    color: #EAE4D2;
+    border-radius: 12px;
+    padding: 40px;
+    margin: 32px 0;
+  }
+  .result-box h3 { color: #AEAF3D; margin-top: 0; }
+  .result-box ul { margin-bottom: 0; }
+  .result-box li { opacity: 0.9; }
+
+  .cta {
+    background: #105288;
+    color: #EAE4D2;
+    text-align: center;
+    padding: 80px 0;
+  }
+  .cta h2 { font-size: 2rem; margin-bottom: 12px; }
+  .cta p { opacity: 0.85; margin-bottom: 32px; font-size: 1.1rem; }
+  .btn {
+    display: inline-block;
+    background: #AEAF3D;
+    color: #101314;
+    padding: 14px 40px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(174, 175, 61, 0.4);
+  }
+
+  footer {
+    background: #101314;
+    color: #EAE4D2;
+    text-align: center;
+    padding: 32px 0;
+    opacity: 0.7;
+    font-size: 0.9rem;
+  }
+
+  .format-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .format-chips span {
+    background: #0A67B0;
+    color: #EAE4D2;
+    padding: 10px 20px;
+    border-radius: 24px;
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  .price-block {
+    background: linear-gradient(135deg, #105288 0%, #0A67B0 100%);
+    color: #EAE4D2;
+    border-radius: 16px;
+    padding: 40px;
+    text-align: center;
+    margin: 24px 0 32px;
+  }
+  .price-amount {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #AEAF3D;
+    letter-spacing: -0.02em;
+  }
+  .price-block p {
+    margin: 8px 0 0;
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 2rem; }
+    .content h2 { font-size: 1.5rem; }
+    .result-box { padding: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="container">
+    <a href="tel:+79053198257">+7 (905) 319-82-57</a>
+    <span>|</span>
+    <a href="mailto:tim-test@yandex.ru">tim-test@yandex.ru</a>
+    <span>|</span>
+    <span>Казань, Республика Татарстан</span>
+  </div>
+</div>
+
+<header>
+  <div class="container">
+    <a href="landing.html" class="logo"><span>Н</span>езависимый технадзор</a>
+    <a href="landing.html" class="back-link">&larr; На главную</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <h1>Строительство <span>под контролем</span></h1>
+    <p>Технический надзор и независимое сопровождение проекта</p>
+  </div>
+</section>
+
+<section class="content">
+  <div class="container">
+
+    <p>Строительство почти всегда выходит за рамки бюджета.</p>
+
+    <p>Причины типовые:</p>
+    <ul>
+      <li>завышенные сметы</li>
+      <li>лишние работы</li>
+      <li>ошибки подрядчиков</li>
+      <li>отсутствие контроля на объекте</li>
+    </ul>
+
+    <p>Мы подключаемся как независимая команда и берём на себя управление процессом, технический надзор и контроль бюджета.</p>
+
+    <hr>
+
+    <h2>Что мы делаем</h2>
+
+    <h3>Управляем процессом</h3>
+    <ul>
+      <li>выстраиваем последовательность строительных этапов</li>
+      <li>формируем технические задания</li>
+      <li>координируем подрядчиков и проектировщиков</li>
+      <li>контролируем выполнение задач</li>
+    </ul>
+
+    <h3>Контролируем подрядчиков</h3>
+    <ul>
+      <li>подбираем и проверяем исполнителей</li>
+      <li>сравниваем коммерческие предложения</li>
+      <li>проверяем реальные рыночные цены</li>
+      <li>помогаем вести переговоры</li>
+      <li>фиксируем понятные условия работы</li>
+    </ul>
+
+    <h3>Защищаем бюджет</h3>
+    <ul>
+      <li>проверяем сметы до начала работ</li>
+      <li>убираем лишние и завышенные позиции</li>
+      <li>оптимизируем решения без потери качества</li>
+      <li>предотвращаем скрытые переплаты</li>
+      <li>контролируем фактические затраты</li>
+    </ul>
+
+    <h3>Ведём технический надзор</h3>
+    <ul>
+      <li>контроль качества работ на объекте</li>
+      <li>проверка технологий и решений</li>
+      <li>анализ фото, видео и документации</li>
+      <li>разбор спорных ситуаций</li>
+      <li>независимая оценка на стороне заказчика</li>
+    </ul>
+
+    <hr>
+
+    <h2>Результат работы</h2>
+
+    <div class="result-box">
+      <h3>Вы платите только за реально необходимые работы.</h3>
+      <ul>
+        <li>избежать переплат подрядчикам</li>
+        <li>не допустить лишних работ и переделок</li>
+        <li>удержать бюджет в рамках реальности</li>
+        <li>принимать обоснованные технические решения</li>
+      </ul>
+    </div>
+
+    <hr>
+
+    <h2>Open Book — прозрачная система работы</h2>
+
+    <p>Мы работаем по модели <strong>Open Book («открытая книга»)</strong>.</p>
+
+    <p>Это означает:</p>
+    <ul>
+      <li>вы видите все реальные цифры проекта</li>
+      <li>прозрачная структура затрат</li>
+      <li>фиксированная стоимость наших услуг</li>
+      <li>без процентов от бюджета строительства</li>
+      <li>без скрытых интересов и наценок</li>
+      <li>полная независимость от подрядчиков</li>
+    </ul>
+
+    <blockquote>Мы зарабатываем только на услуге. Не на вашем бюджете.</blockquote>
+
+    <hr>
+
+    <h2>Почему это работает</h2>
+
+    <p>Контроль на раннем этапе даёт основной эффект экономии.</p>
+
+    <p>На практике удаётся:</p>
+    <ul>
+      <li>снизить сметную стоимость работ</li>
+      <li>убрать лишние позиции</li>
+      <li>избежать ошибок проектирования и стройки</li>
+      <li>сократить перерасход бюджета</li>
+      <li>сохранить сроки и управляемость проекта</li>
+    </ul>
+
+    <hr>
+
+    <h2>Для кого это решение</h2>
+
+    <p>Подходит, если вы:</p>
+    <ul>
+      <li>строите или ремонтируете коммерческий объект</li>
+      <li>запускаете офис, магазин или помещение под бизнес</li>
+      <li>контролируете подрядчиков и не хотите переплат</li>
+      <li>хотите понимать, куда реально уходят деньги</li>
+      <li>не готовы «отдавать стройку на самотёк»</li>
+    </ul>
+
+    <hr>
+
+    <blockquote>Контроль стройки. Прозрачный бюджет. Никаких лишних затрат.</blockquote>
+
+    <hr>
+
+    <h2>Форматы работы</h2>
+    <div class="format-chips">
+      <span>разовые консультации</span>
+      <span>проверка смет и подрядчиков</span>
+      <span>сопровождение отдельных этапов</span>
+      <span>технический аудит объекта</span>
+      <span>полное ведение строительного проекта</span>
+    </div>
+
+    <hr>
+
+    <h2>Стоимость услуг</h2>
+
+    <div class="price-block">
+      <div class="price-amount">От 70 000 руб.</div>
+      <p>за выполнение одного раздела работ</p>
+    </div>
+
+    <p>Мы работаем поэтапно, в рамках отдельных строительных разделов. Это позволяет контролировать бюджет точечно и эффективно.</p>
+
+    <h3>Примеры разделов:</h3>
+    <ul>
+      <li>каркас здания (монолит, металлоконструкции)</li>
+      <li>кирпичная и блочная кладка</li>
+      <li>кровельные работы</li>
+      <li>фасады</li>
+      <li>инженерные сети (электрика, водоснабжение, отопление, вентиляция)</li>
+      <li>отделочные работы</li>
+      <li>благоустройство территории</li>
+    </ul>
+
+    <h3>Что входит в стоимость раздела</h3>
+
+    <p>Каждый раздел включает полный цикл управления и контроля:</p>
+    <ul>
+      <li>подбор материалов и решений под задачу</li>
+      <li>анализ рынка и поиск оптимальных предложений</li>
+      <li>подготовка технического задания</li>
+      <li>формирование ведомости объёмов работ (ВОР)</li>
+      <li>рассылка подрядчикам и сбор КП</li>
+      <li>анализ и сравнение коммерческих предложений</li>
+      <li>определение оптимального подрядчика и поставщика</li>
+      <li>сопровождение выхода на договор</li>
+      <li>выездной технический контроль выполнения условий договора</li>
+      <li>авторский/технический надзор на этапе реализации</li>
+    </ul>
+
+  </div>
+</section>
+
+<section class="cta">
+  <div class="container">
+    <h2>Оставьте заявку</h2>
+    <p>Мы разберём ваш проект и покажем, где теряется бюджет и как это можно оптимизировать ещё до начала работ.</p>
+    <a href="#" class="btn">Связаться</a>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    &copy; 2026 Независимый технадзор. Все права защищены.
+  </div>
+</footer>
+
+</body>
+</html>
