@@ -1,4 +1,7 @@
 User-agent: *
+Disallow: /landing.html
 Allow: /
 
 Sitemap: https://technadzorkazan.ru/sitemap.xml
+
+Host: https://technadzorkazan.ru
