@@ -3,7 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Физическим лицам — Независимый технадзор</title>
+<title>Технадзор для физических лиц — ремонт и строительство в Казани | Независимый технадзор</title>
+<meta name="description" content="Независимый технадзор для частных заказчиков в Казани. Сопровождение ремонта квартиры, дома, коттеджа, дачи. Контроль качества, сметы и подрядчиков.">
+<meta name="keywords" content="технадзор, физические лица, ремонт квартиры, строительство дома, контроль стройки, Казань">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Технадзор для физических лиц — Казань">
+<meta property="og:description" content="Сопровождение ремонта и строительства для частных заказчиков. Без лишних переплат.">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://technadzorkazan.ru/physical.html">
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
@@ -550,11 +557,11 @@
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
+emailjs.init('-S1e762arpbUov2ic');
 const form = document.getElementById('contactForm');
 const btn = document.getElementById('submitBtn');
-const botToken = '8525239619:AAFL9xNHCS9jLYj2QVcFlABngXwmX0g_hL8';
-const chatId = '1435755028';
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -565,27 +572,21 @@ form.addEventListener('submit', async (e) => {
   const phone = form.phone.value.trim();
   const email = form.email.value.trim();
   const message = form.message.value.trim();
-  const file = form.attachment.files[0];
 
-  const text = `&#9989; Новая заявка с сайта (физлица)%0A%0A&#128100; Имя: ${encodeURIComponent(name)}%0A&#128222; Телефон: ${encodeURIComponent(phone)}%0A&#9993; E-mail: ${encodeURIComponent(email)}%0A&#128221; Проект: ${encodeURIComponent(message || 'не указан')}`;
+  try {
+    await emailjs.send('service_c2yal7e', 'template_q3t7rj8', {
+      name: name,
+      phone: phone,
+      email: email,
+      message: message || 'не указан',
+      page: 'Физлица'
+    });
+  } catch(e) {}
 
-  await fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${text}&parse_mode=HTML`);
-
-  if (file) {
-    const fd = new FormData();
-    fd.append('chat_id', chatId);
-    fd.append('document', file);
-    fd.append('caption', `Файл от ${name} (${phone})`);
-    await fetch(`https://api.telegram.org/bot${botToken}/sendDocument`, { method: 'POST', body: fd }).catch(() => {});
-  }
-
-  const fdEmail = new FormData();
-  fdEmail.append('name', name);
-  fdEmail.append('phone', phone);
-  fdEmail.append('email', email);
-  fdEmail.append('message', message);
-  fdEmail.append('_subject', 'Заявка с сайта технадзора (физлица)');
-  navigator.sendBeacon('https://formsubmit.co/tim-test@yandex.ru', fdEmail);
+  try {
+    const text = `&#9989; Новая заявка (физлица)%0A%0A&#128100; ${encodeURIComponent(name)}%0A&#128222; ${encodeURIComponent(phone)}%0A&#9993; ${encodeURIComponent(email)}%0A&#128221; ${encodeURIComponent(message || 'не указан')}`;
+    await fetch(`https://api.telegram.org/bot8525239619:AAFL9xNHCS9jLYj2QVcFlABngXwmX0g_hL8/sendMessage?chat_id=1435755028&text=${text}&parse_mode=HTML`);
+  } catch(e) {}
 
   form.innerHTML = '<p style="font-size:1.2rem;color:#AEAF3D;font-weight:700;">&#9989; Спасибо! Заявка отправлена. Мы свяжемся с вами в ближайшее время.</p>';
 });
