@@ -289,22 +289,6 @@
   .contact-form textarea:focus { background: rgba(234, 228, 210, 0.2); }
   .contact-form textarea { min-height: 100px; resize: vertical; }
   .contact-form .btn { width: 100%; cursor: pointer; border: none; }
-  .contact-form input[type="file"] {
-    padding: 10px 14px;
-    font-size: 0.9rem;
-    background: rgba(234, 228, 210, 0.08);
-  }
-  .contact-form input[type="file"]::file-selector-button {
-    background: #AEAF3D;
-    color: #101314;
-    border: none;
-    border-radius: 6px;
-    padding: 6px 14px;
-    font-weight: 600;
-    font-size: 0.85rem;
-    cursor: pointer;
-    margin-right: 12px;
-  }
 
   /* Footer */
   footer {
@@ -416,8 +400,7 @@
       <input type="text" name="name" placeholder="Ваше имя" required>
       <input type="tel" name="phone" placeholder="Номер телефона" required>
       <input type="email" name="email" placeholder="Ваш e-mail" required>
-      <textarea name="message" placeholder="Краткое описание проекта"></textarea>
-      <input type="file" name="attachment" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.zip,.rar,.xls,.xlsx">
+      <textarea name="message" placeholder="Краткое описание проекта. Если есть сметы или фото — пришлите их нам в Telegram после отправки заявки."></textarea>
       <button type="submit" class="btn" id="submitBtn">&#128073; Оставить заявку на консультацию</button>
     </form>
     <p class="note">Мы обязательно свяжемся с вами в ближайшее время.</p> 
