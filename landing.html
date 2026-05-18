@@ -269,32 +269,40 @@
   .cta p { opacity: 0.85; margin-bottom: 16px; font-size: 1.05rem; max-width: 600px; margin-left: auto; margin-right: auto; }
   .cta .note { opacity: 0.6; font-size: 0.9rem; margin-top: 24px; }
 
-  .contact-form {
-    max-width: 520px;
-    margin: 32px auto 0;
-    display: flex;
-    flex-direction: column;
+  .contact-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 16px;
+    max-width: 780px;
+    margin: 32px auto 0;
   }
-  .contact-form input,
-  .contact-form textarea {
-    width: 100%;
-    padding: 14px 18px;
-    border: none;
-    border-radius: 8px;
-    background: rgba(177, 206, 193, 0.12);
+  .contact-card {
+    background: rgba(248, 250, 250, 0.12);
+    border-radius: 12px;
+    padding: 24px 16px 20px;
+    text-align: center;
+    border: 1px solid rgba(248, 250, 250, 0.2);
+    transition: background 0.2s, transform 0.2s;
+  }
+  .contact-card:hover {
+    background: rgba(248, 250, 250, 0.2);
+    transform: translateY(-2px);
+  }
+  .contact-card .label {
+    font-size: 0.8rem;
+    color: rgba(248, 250, 250, 0.7);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .contact-card a {
     color: #F8FAFA;
-    font-size: 1rem;
-    font-family: inherit;
-    outline: none;
-    transition: background 0.2s;
+    font-size: 1.05rem;
+    font-weight: 700;
+    text-decoration: none;
+    display: block;
   }
-  .contact-form input::placeholder,
-  .contact-form textarea::placeholder { color: rgba(177, 206, 193, 0.5); }
-  .contact-form input:focus,
-  .contact-form textarea:focus { background: rgba(177, 206, 193, 0.2); }
-  .contact-form textarea { min-height: 100px; resize: vertical; }
-  .contact-form .btn { width: 100%; cursor: pointer; border: none; }
+  .contact-card a:hover { text-decoration: underline; }
 
   /* Footer */
   footer {
@@ -324,9 +332,6 @@
     .cta p { font-size: 0.95rem; }
     header .container { flex-direction: column; gap: 10px; }
     nav a { margin: 0 10px; font-size: 0.9rem; }
-    .contact-form { gap: 12px; }
-    .contact-form input,
-    .contact-form textarea { padding: 12px 14px; font-size: 0.95rem; }
     .top-bar .container { font-size: 0.8rem; gap: 4px 12px; }
     .btn { padding: 12px 28px; font-size: 0.95rem; }
   }
@@ -424,16 +429,27 @@
 
 <section id="cta" class="cta">
   <div class="container">
-    <h2>Оставьте заявку</h2>
-    <p>Расскажите кратко о вашем проекте — мы изучим задачу и свяжемся с вами, чтобы обсудить возможные решения и формат работы.</p>
-    <form class="contact-form" id="contactForm">
-      <input type="text" name="name" placeholder="Ваше имя" required>
-      <input type="tel" name="phone" placeholder="Номер телефона" required>
-      <input type="email" name="email" placeholder="Ваш e-mail" required>
-      <textarea name="message" placeholder="Кратко опишите задачу. Файлы направьте в удобный мессенджер или на почту"></textarea>
-      <button type="submit" class="btn" id="submitBtn">&#128073; Оставить заявку на консультацию</button>
-    </form>
-    <p class="note">Мы обязательно свяжемся с вами в ближайшее время.</p> 
+    <h2>Свяжитесь с нами</h2>
+    <p style="opacity:1;margin-bottom:0;">Выберите удобный способ связи — мы на связи в мессенджерах и по телефону.</p>
+    <div class="contact-cards">
+      <div class="contact-card">
+        <div class="label">Телефон</div>
+        <a href="tel:+79053198257">+7 (905) 319-82-57</a>
+      </div>
+      <div class="contact-card">
+        <div class="label">Email</div>
+        <a href="mailto:tim-test@yandex.ru">tim-test@yandex.ru</a>
+      </div>
+      <div class="contact-card">
+        <div class="label">Telegram</div>
+        <a href="https://t.me/+79053198257" target="_blank">+7 (905) 319-82-57</a>
+      </div>
+      <div class="contact-card">
+        <div class="label">WhatsApp</div>
+        <a href="https://wa.me/79053198257" target="_blank">+7 (905) 319-82-57</a>
+      </div>
+    </div>
+    <p style="color:rgba(248,250,250,0.6);font-size:0.9rem;margin-top:32px;">Казань, Республика Татарстан</p> 
   </div>
 </section>
 
@@ -453,40 +469,7 @@
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>
-emailjs.init('-S1e762arpbUov2ic');
-const form = document.getElementById('contactForm');
-const btn = document.getElementById('submitBtn');
 
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  btn.textContent = 'Отправка...';
-  btn.disabled = true;
-
-  const name = form.name.value.trim();
-  const phone = form.phone.value.trim();
-  const email = form.email.value.trim();
-  const message = form.message.value.trim();
-
-  try {
-    await emailjs.send('service_c2yal7e', 'template_q3t7rj8', {
-      name: name,
-      phone: phone,
-      email: email,
-      message: message || 'не указан',
-      page: 'Главная'
-    });
-  } catch(e) {}
-
-  try {
-    const text = `&#9989; Новая заявка с сайта%0A%0A&#128100; ${encodeURIComponent(name)}%0A&#128222; ${encodeURIComponent(phone)}%0A&#9993; ${encodeURIComponent(email)}%0A&#128221; ${encodeURIComponent(message || 'не указан')}`;
-    await fetch(`https://api.telegram.org/bot8525239619:AAFL9xNHCS9jLYj2QVcFlABngXwmX0g_hL8/sendMessage?chat_id=1435755028&text=${text}&parse_mode=HTML`);
-  } catch(e) {}
-
-  form.innerHTML = '<p style="font-size:1.2rem;color:#236575;font-weight:700;">&#9989; Спасибо! Заявка отправлена. Мы свяжемся с вами в ближайшее время.</p>';
-});
-</script>
 
 </body>
 </html>
