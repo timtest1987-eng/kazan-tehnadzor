@@ -345,13 +345,15 @@
   .cta p { opacity: 0.85; margin: 0 auto 32px; font-size: 1.05rem; max-width: 600px; }
 
   .contact-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    display: flex;
+    flex-wrap: nowrap;
     gap: 16px;
     max-width: 780px;
     margin: 32px auto 0;
   }
   .contact-card {
+    flex: 1;
+    min-width: 0;
     background: rgba(248, 250, 250, 0.12);
     border-radius: 12px;
     padding: 24px 16px 20px;
