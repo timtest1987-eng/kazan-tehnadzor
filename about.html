@@ -91,13 +91,26 @@
     text-decoration: none;
   }
   .logo span { color: #F8FAFA; }
-  .back-link {
+  nav {
+    display: flex;
+    gap: 4px;
+    flex: 1;
+    justify-content: center;
+  }
+  nav a {
+    flex: 1;
+    text-align: center;
     color: #F8FAFA;
     text-decoration: none;
     font-weight: 500;
-    transition: color 0.2s;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    padding: 6px 4px;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.2s, color 0.2s;
   }
-  .back-link:hover { color: #F8FAFA; }
+  nav a:hover { color: #B1CEC1; border-bottom-color: rgba(248,250,250,0.3); }
+  nav a.active { border-bottom-color: #F8FAFA; }
 
   .hero {
     background: linear-gradient(135deg, #236575 0%, #236575 100%);
@@ -204,6 +217,8 @@
     .stat-number { font-size: 1.8rem; }
     .about-quote { font-size: 1rem; padding: 16px 20px; }
     header .container { flex-direction: column; gap: 8px; }
+    nav { gap: 2px; }
+    nav a { font-size: 0.85rem; padding: 4px 2px; }
     .top-bar .container { font-size: 0.8rem; gap: 4px 12px; }
   }
 </style>
@@ -233,10 +248,12 @@
   <div class="container">
     <a href="index.html" class="logo"><span>Н</span>езависимый технадзор</a>
     <nav>
-    <a href="services-and-prices.html">Услуги и цены</a>
-    <a href="losses.html">Где теряют деньги</a>
-    <a href="index.html">На главную</a>
-  </nav>
+      <a href="losses.html">Где теряют деньги</a>
+      <a href="about.html" class="active">О нас</a>
+      <a href="brochure.html">Что входит в сопровождение</a>
+      <a href="services-and-prices.html">Услуги и цены</a>
+      <a href="index.html#cta">Контакты</a>
+    </nav>
   </div>
 </header>
 

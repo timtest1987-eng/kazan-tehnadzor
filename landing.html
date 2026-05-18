@@ -102,14 +102,26 @@
     letter-spacing: -0.02em;
   }
   .logo span { color: #F8FAFA; }
+  nav {
+    display: flex;
+    gap: 4px;
+    flex: 1;
+    justify-content: center;
+  }
   nav a {
+    flex: 1;
+    text-align: center;
     color: #F8FAFA;
     text-decoration: none;
-    margin-left: 32px;
     font-weight: 500;
-    transition: color 0.2s;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    padding: 6px 4px;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.2s, color 0.2s;
   }
-  nav a:hover { color: #F8FAFA; }
+  nav a:hover { color: #B1CEC1; border-bottom-color: rgba(248,250,250,0.3); }
+  nav a.active { border-bottom-color: #F8FAFA; }
 
   /* Hero */
   .hero {
@@ -331,7 +343,8 @@
     .cta h2 { font-size: 1.5rem; }
     .cta p { font-size: 0.95rem; }
     header .container { flex-direction: column; gap: 10px; }
-    nav a { margin: 0 10px; font-size: 0.9rem; }
+    nav { gap: 2px; }
+    nav a { font-size: 0.85rem; padding: 4px 2px; }
     .top-bar .container { font-size: 0.8rem; gap: 4px 12px; }
     .btn { padding: 12px 28px; font-size: 0.95rem; }
   }
