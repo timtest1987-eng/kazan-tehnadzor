@@ -264,6 +264,16 @@
     font-size: 0.9rem;
   }
 
+  @media print {
+    @page { margin: 0; }
+    body { margin: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .top-bar, header, .download-box, .cta, footer, script { display: none !important; }
+    .hero { padding: 40px 0 20px !important; }
+    section.steps { padding: 24px 0 !important; }
+    .highlight { break-inside: avoid; }
+    .container { max-width: 100%; padding: 0 20px; }
+  }
+
   @media (max-width: 768px) {
     .container { padding: 0 16px; }
     .hero { padding: 48px 0 40px; }
