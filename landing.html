@@ -92,8 +92,14 @@
   }
   header .container {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+  }
+  .brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 6px;
   }
   .logo {
     color: #F8FAFA;
@@ -105,7 +111,6 @@
   nav {
     display: flex;
     gap: 4px;
-    flex: 1;
     justify-content: center;
   }
   nav a {
@@ -344,7 +349,9 @@
     .cta p { font-size: 0.95rem; }
     .contact-cards { grid-template-columns: 1fr; }
     header { position: static; }
-    header .container { flex-direction: column; gap: 10px; }
+    header { padding: 12px 0; }
+    header .container { gap: 8px; }
+    .logo-svg { width: 72px; height: 72px; }
     nav { flex-direction: column; align-items: stretch; gap: 2px; }
     nav a { flex: none; padding: 8px 12px; text-align: center; font-size: 0.9rem; border-bottom: none; border-left: 3px solid transparent; }
     nav a.active { border-left-color: #F8FAFA; border-bottom-color: transparent; }
@@ -377,14 +384,14 @@
 
 <header>
   <div class="container">
-    <div class="logo">
-      <svg width="40" height="40" viewBox="0 0 48 48" style="vertical-align:middle;margin-right:10px;">
+    <div class="brand">
+      <svg class="logo-svg" width="120" height="120" viewBox="0 0 48 48">
         <circle cx="24" cy="24" r="22" fill="#236575"/>
         <text x="9" y="31" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="16" fill="#F8FAFA">Н</text>
         <text x="24" y="31" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="19" fill="#D4A853">Т</text>
         <text x="39" y="31" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="16" fill="#F8FAFA">Н</text>
       </svg>
-      <span>Н</span>езависимый технадзор
+      <div class="logo"><span>Н</span>езависимый технадзор</div>
     </div>
     <nav>
       <a href="about.html">О нас</a>
