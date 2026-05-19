@@ -79,8 +79,8 @@
   }
   header .container {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
   }
   .logo {
     color: #F8FAFA;
@@ -92,19 +92,20 @@
   .logo span { color: #F8FAFA; }
   nav {
     display: flex;
-    gap: 4px;
-    flex: 1;
+    gap: 6px;
     justify-content: center;
+    flex-wrap: wrap;
   }
+  nav a.nav-gold { color: #D4A853; }
+  nav a.nav-gold:hover { color: #D4A853; border-bottom-color: #D4A853; }
   nav a {
-    flex: 1;
     text-align: center;
     color: #F8FAFA;
     text-decoration: none;
     font-weight: 500;
     font-size: 0.95rem;
     white-space: nowrap;
-    padding: 6px 4px;
+    padding: 6px 10px;
     border-bottom: 2px solid transparent;
     transition: border-color 0.2s, color 0.2s;
   }
@@ -411,7 +412,7 @@
     .contact-cards { grid-template-columns: 1fr; }
     .contact-form { max-width: 100%; }
     header { position: static; }
-    header .container { flex-direction: column; gap: 8px; }
+    header .container { gap: 8px; }
     nav { flex-direction: column; align-items: stretch; gap: 2px; }
     nav a { flex: none; padding: 8px 12px; text-align: center; font-size: 0.9rem; border-bottom: none; border-left: 3px solid transparent; }
     nav a.active { border-left-color: #F8FAFA; border-bottom-color: transparent; }
@@ -527,7 +528,7 @@
       <a href="brochure.html">Что входит в сопровождение</a>
       <a href="services-and-prices.html">Услуги и цены</a>
       <a href="index.html#cta">Контакты</a>
-      <a href="who-needs.html" class="active nav-gold" style="color:#D4A853;border-bottom-color:#D4A853;">Кому подходит услуга</a>
+      <a href="who-needs.html" class="active nav-gold">Кому подходит услуга</a>
     </nav>
   </div>
 </header>
