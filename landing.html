@@ -28,6 +28,7 @@
     line-height: 1.6;
   }
   .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+  .container-wide { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
 
   /* Background image for light sections */
   .bg-img {
@@ -87,7 +88,8 @@
     padding: 16px 0;
     z-index: 100;
   }
-  header .container {
+  header .container,
+  header .container-wide {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -371,6 +373,16 @@
     font-size: 0.9rem;
   }
 
+  @media (min-width: 769px) {
+    header .container,
+    header .container-wide {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+
   @media (max-width: 768px) {
     .container { padding: 0 16px; }
     section { padding: 56px 0; }
@@ -390,7 +402,8 @@
     .contact-cards { grid-template-columns: 1fr; }
     .contact-form { max-width: 100%; }
     header { padding: 12px 0; }
-    header .container { gap: 8px; }
+    header .container,
+    header .container-wide { gap: 8px; }
     .logo-svg { width: 72px; height: 72px; }
     nav { flex-direction: column; align-items: stretch; gap: 2px; }
     nav a { flex: none; padding: 8px 12px; text-align: center; font-size: 0.9rem; border-bottom: none; border-left: 3px solid transparent; }
@@ -500,7 +513,7 @@
 </div>
 
 <header>
-  <div class="container">
+  <div class="container-wide">
     <div class="brand">
       <svg class="logo-svg" width="120" height="120" viewBox="0 0 48 48">
         <circle cx="24" cy="24" r="22" fill="#236575"/>

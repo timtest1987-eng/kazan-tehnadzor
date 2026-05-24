@@ -41,6 +41,7 @@
     line-height: 1.7;
   }
   .container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+  .container-wide { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
 
   .top-bar {
     background: #236575;
@@ -66,12 +67,8 @@
     top: 0;
     z-index: 100;
   }
-  header .container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  header .container {
+  header .container,
+  header .container-wide {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -278,6 +275,16 @@
     .container { max-width: 100%; padding: 0 16px; }
   }
 
+  @media (min-width: 769px) {
+    header .container,
+    header .container-wide {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+
   @media (max-width: 768px) {
     .container { padding: 0 16px; }
     .hero { padding: 32px 0 28px; }
@@ -288,7 +295,8 @@
     .contact-cards { grid-template-columns: 1fr; }
     .contact-form { max-width: 100%; }
     header { position: static; }
-    header .container { gap: 8px; }
+    header .container,
+    header .container-wide { gap: 8px; }
     nav { flex-direction: column; align-items: stretch; gap: 2px; }
     nav a { flex: none; padding: 8px 12px; text-align: center; font-size: 0.9rem; border-bottom: none; border-left: 3px solid transparent; }
     nav a.active { border-left-color: #F8FAFA; border-bottom-color: transparent; }
@@ -393,7 +401,7 @@
 </div>
 
 <header>
-  <div class="container">
+  <div class="container-wide">
     <a href="index.html" class="logo"><span>Н</span>езависимый технадзор</a>
     <nav>
       <a href="about.html">О нас</a>

@@ -38,6 +38,7 @@
     line-height: 1.6;
   }
   .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+  .container-wide { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
 
   /* Background image for light sections */
   .bg-img {
@@ -384,6 +385,16 @@
     font-size: 0.9rem;
   }
 
+  @media (min-width: 769px) {
+    header .container,
+    header .container-wide {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+
   @media (max-width: 768px) {
     .container { padding: 0 16px; }
     section { padding: 56px 0; }
@@ -404,7 +415,8 @@
   .contact-form { max-width: 100%; }
   .modal-trigger { margin: 24px auto 0; width: 100%; }
   header { padding: 12px 0; }
-    header .container { gap: 8px; }
+    header .container,
+    header .container-wide { gap: 8px; }
     .logo-svg { width: 72px; height: 72px; }
     nav { flex-direction: column; align-items: stretch; gap: 2px; }
     nav a { flex: none; padding: 8px 12px; text-align: center; font-size: 0.9rem; border-bottom: none; border-left: 3px solid transparent; }
@@ -514,17 +526,17 @@
 </div>
 
 <header>
-  <div class="container">
-    <div class="brand">
-      <svg class="logo-svg" width="120" height="120" viewBox="0 0 48 48">
-        <circle cx="24" cy="24" r="22" fill="#236575"/>
-        <text x="9" y="31" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="16" fill="#F8FAFA">Н</text>
-        <text x="24" y="31" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="19" fill="#D4A853">Т</text>
-        <text x="39" y="31" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="16" fill="#F8FAFA">Н</text>
-      </svg>
-      <div class="logo"><span>Н</span>езависимый технадзор</div>
-    </div>
-    <nav>
+    <div class="container-wide">
+      <div class="header-top">
+        <svg class="logo-svg" width="120" height="120" viewBox="0 0 48 48">
+          <circle cx="24" cy="24" r="22" fill="#236575"/>
+          <text x="9" y="31" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="16" fill="#F8FAFA">Н</text>
+          <text x="24" y="31" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="19" fill="#D4A853">Т</text>
+          <text x="39" y="31" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="16" fill="#F8FAFA">Н</text>
+        </svg>
+        <div class="logo"><span>Н</span>езависимый технадзор</div>
+      </div>
+      <nav>
       <a href="losses.html">Где теряют деньги</a>
       <a href="about.html">О нас</a>
       <a href="brochure.html">Что входит в сопровождение</a>
@@ -540,8 +552,8 @@
 <section class="hero">
   <div class="container">
     <h1>Независимое сопровождение<br><span>строительства, ремонта</span><br>и реконструкции</h1>
-    <p>Стройте с профессионалами — без лишних комиссий и переплат</p>
-    <p class="hero-accent">Независимый технадзор и руководитель проекта (аутсорсинг)</p>
+    <p>Независимое сопровождение строительства, ремонта и реконструкции в Казани (прораб, мастер СМР, начальник участка — аутсорсинг)</p>
+    <p class="hero-accent">Независимый технадзор (строительный контроль) Казань</p>
     <div class="split-choice">
       <a href="physical.html" class="choice-card">
         <div class="icon">&#128100;</div>
