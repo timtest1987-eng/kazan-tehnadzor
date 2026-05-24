@@ -7,6 +7,7 @@
 - `legal.html` — Технадзор для юридических лиц
 - `physical.html` — Технадзор для физических лиц
 - `landing.html` — Дубликат главной для рекламы (noindex)
+- `chastnyj-zakazchik.html` — SEO-страница «Частный заказчик» (бытовые запросы)
 - `404.html` — Страница ошибки
 - `robots.txt` — Закрыт landing.html
 - `sitemap.xml` — Все страницы кроме landing.html
@@ -17,25 +18,12 @@
 - `kamal.jpg`, `photo.jpg`, `m-2-1536x1097.jpg` — изображения
 
 ## Изменения (последняя сессия)
-- Заменён favicon: inline SVG эмодзи → favicon.ico + favicon.png
-- Добавлена страница `brochure.html` с описанием услуги 5 шагов + Open Book
-- Создан `brochure.pdf` для скачивания
-- Добавлена ссылка на брошюру в навигацию главной
+- Создана SEO-страница `chastnyj-zakazchik.html` для привлечения частных клиентов по бытовым запросам
+- Добавлена кнопка «Частный заказчик» в навигацию на всех страницах
 - Обновлён sitemap.xml
-
-## Хостинг
-GitHub Pages, домен: technadzorkazan.ru, репозиторий: timtest1987-eng/kazan-tehnadzor
-
-## Контакты на сайте
-- Тел: +7 (905) 319-82-57
-- Email: tim-test@yandex.ru
-- Telegram/WhatsApp: +79053198257
-- EmailJS: service_c2yal7e / template_q3t7rj8
-- Telegram bot: 8525239619:AAFL9xNHCS9jLYj2QVcFlABngXwmX0g_hL8 → chat 1435755028
 
 ## Дальнейшие шаги (не сделано)
 1. Запушить изменения (git push)
 2. Запросить переобход в Яндекс.Вебмастер и Google Search Console
-3. Проверить индексацию через 1-2 недели
-4. Сжать/конвертировать изображения в WebP для скорости
-5. Добавить Google Analytics / Яндекс.Метрику
+3. Сжать/конвертировать изображения в WebP для скорости
+4. Добавить Google Analytics / Яндекс.Метрику
