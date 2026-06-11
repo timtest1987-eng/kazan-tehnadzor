@@ -21,7 +21,7 @@ function replyToTelegram(botToken, chatId, replyToMessageId, text) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, context) {
     const { MESSAGES, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID } = env;
     const url = new URL(request.url);
     const path = url.pathname;
@@ -62,20 +62,22 @@ export default {
         existing.push(newMsg);
         await MESSAGES.put(msgKey, JSON.stringify(existing), { expirationTtl: 2592000 });
 
-        // Forward to Telegram
+        // Forward to Telegram in background
         const sender = name || "Клиент";
-        const telRes = await sendTelegram(
-          TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID,
-          `✉️ *${sender}* (${visitorId.substring(0, 8)}…)\n\n${message}`
+        context.waitUntil(
+          sendTelegram(
+            TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID,
+            `✉️ *${sender}* (${visitorId.substring(0, 8)}…)\n\n${message}`
+          ).then(telRes => {
+            // Map Telegram message ID → visitorId
+            if (telRes.ok && telRes.result) {
+              return MESSAGES.put(`map:${telRes.result.message_id}`, visitorId, { expirationTtl: 2592000 });
+            }
+          }).catch(() => {})
         );
 
-        // Map Telegram message ID → visitorId
-        if (telRes.ok) {
-          const telMsgId = telRes.result.message_id;
-          await MESSAGES.put(`map:${telMsgId}`, visitorId, { expirationTtl: 2592000 });
-        }
-
-        return new Response(JSON.stringify({ ok: true, telegram: telRes.ok }), {
+        // Respond immediately
+        return new Response(JSON.stringify({ ok: true }), {
           headers: { "Content-Type": "application/json", ...corsHeaders },
         });
       }
