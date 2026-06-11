@@ -521,31 +521,31 @@
 /* Floating Chat Button */
 .chat-btn {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
-  width: 60px;
-  height: 60px;
-  background: #236575;
-  color: #F8FAFA;
+  bottom: 32px;
+  right: 32px;
+  width: 120px;
+  height: 120px;
+  background: transparent;
   border: none;
   border-radius: 50%;
   font-size: 0;
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(35, 101, 117, 0.4);
   z-index: 999;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s;
+  padding: 0;
+  filter: drop-shadow(0 6px 20px rgba(35, 101, 117, 0.5));
 }
 .chat-btn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 24px rgba(35, 101, 117, 0.5);
+  transform: scale(1.08);
+  filter: drop-shadow(0 8px 28px rgba(35, 101, 117, 0.6));
 }
-.chat-btn svg { width: 28px; height: 28px; }
+.chat-btn svg { width: 100%; height: 100%; display: block; }
 .chat-widget {
   position: fixed;
-  bottom: 96px;
+  bottom: 170px;
   right: 24px;
   width: 360px;
   max-width: calc(100vw - 48px);
@@ -612,9 +612,9 @@
 .chat-input-area button:hover { background: #1a4f5c; }
 .chat-input-area button:disabled { opacity: 0.5; cursor: not-allowed; }
 @media (max-width: 480px) {
-  .chat-btn { bottom: 16px; right: 16px; width: 52px; height: 52px; }
-  .chat-btn svg { width: 24px; height: 24px; }
-  .chat-widget { bottom: 80px; right: 8px; width: calc(100vw - 16px); height: 60vh; }
+  .chat-btn { bottom: 16px; right: 16px; width: 80px; height: 80px; }
+  .chat-btn svg { width: 100%; height: 100%; display: block; }
+  .chat-widget { bottom: 110px; right: 8px; width: calc(100vw - 16px); height: 60vh; }
   .chat-logo-wrap { width: 44px; height: 44px; }
 }
 </style>
@@ -777,7 +777,17 @@
 </footer>
 
 <button class="chat-btn" id="chatBtn" aria-label="Чат">
-  <svg viewBox="0 0 24 24" fill="#F8FAFA"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  <svg viewBox="0 0 120 120">
+    <defs><path id="btn-arc" d="M 60 14 A 46 46 0 1 1 59.9 14"/></defs>
+    <circle cx="60" cy="60" r="56" fill="#1a4f5c"/>
+    <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(248,250,250,0.25)" stroke-width="1"/>
+    <text font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#F8FAFA" letter-spacing="1.5">
+      <textPath href="#btn-arc" startOffset="8%">Чат! Контакты не требуются</textPath>
+    </text>
+    <g transform="translate(60,62)" fill="none" stroke="#F8FAFA" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M-10-3a3 3 0 0 0-3 3v10a5 5 0 0 0 10 0V-5a4 4 0 0 0-8 0v13a2 2 0 0 0 4 0V0"/>
+    </g>
+  </svg>
 </button>
 
 <div class="chat-widget" id="chatWidget">
@@ -803,7 +813,7 @@
   <div class="chat-messages" id="chatMessages">
     <div class="chat-msg bot">
       <div style="font-weight:700;margin-bottom:4px;">Скрепыч 📎</div>
-      Привет! Не переживайте, ГОСТ на чувство юмора пока не ввели, поэтому &#x1F60A;<br><br>
+      Привет! Сейчас единственный способ связаться — этот чат 🙂<br><br>
       Не буду просить телефон, почту, паспорт, ИНН, СНИЛС и девичью фамилию бабушки.<br><br>
       Просто расскажите, о чём сейчас думаете:<br>
       &#x2714; нужен технадзор?<br>
@@ -811,7 +821,7 @@
       &#x2714; планируете строительство/ремонт?<br>
       &#x2714; забыли? вернитесь на то место где начинали мысль!<br><br>
       Начните писать — дальше разберёмся.<br>
-      Кстати я живой — не ИИ.
+      Кстати, я живой — не ИИ.
     </div>
   </div>
   <div class="chat-input-area">
