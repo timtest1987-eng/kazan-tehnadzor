@@ -1,38 +1,23 @@
 // Cloudflare Worker — Telegram Chat Bridge
-// Environment variables (secrets):
-//   TELEGRAM_BOT_TOKEN — from @BotFather
-//   TELEGRAM_CHAT_ID   — your Telegram user/group chat ID
 // KV namespace: MESSAGES
+// Secrets: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
 
-async function sendTelegram(text) {
-  const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-  const payload = {
-    chat_id: parseInt(TELEGRAM_CHAT_ID, 10),
-    text,
-    parse_mode: "Markdown",
-  };
-  const res = await fetch(url, {
+function sendTelegram(botToken, chatId, text) {
+  const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+  return fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-  return res.json();
+    body: JSON.stringify({ chat_id: parseInt(chatId, 10), text, parse_mode: "Markdown" }),
+  }).then(r => r.json());
 }
 
-async function replyToTelegram(chatId, replyToMessageId, text) {
-  const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-  const payload = {
-    chat_id: chatId,
-    text,
-    reply_to_message_id: replyToMessageId,
-    parse_mode: "Markdown",
-  };
-  const res = await fetch(url, {
+function replyToTelegram(botToken, chatId, replyToMessageId, text) {
+  const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+  return fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-  return res.json();
+    body: JSON.stringify({ chat_id: chatId, text, reply_to_message_id: replyToMessageId, parse_mode: "Markdown" }),
+  }).then(r => r.json());
 }
 
 export default {
@@ -80,6 +65,7 @@ export default {
         // Forward to Telegram
         const sender = name || "Клиент";
         const telRes = await sendTelegram(
+          TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID,
           `✉️ *${sender}* (${visitorId.substring(0, 8)}…)\n\n${message}`
         );
 
