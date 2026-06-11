@@ -19,39 +19,65 @@ export default {
     }
 
     try {
+      // ---------- GET /api/health — quick check ----------
+      if (path === "/api/health") {
+        return new Response(JSON.stringify({ ok: true, t: Date.now() }), {
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
+      }
+
       // ---------- POST /api/send — widget sends a message ----------
       if (path === "/api/send" && method === "POST") {
-        const { visitorId, message, name } = await request.json();
+        let visitorId, message, name;
+        try {
+          const body = await request.json();
+          visitorId = body.visitorId;
+          message = body.message;
+          name = body.name;
+        } catch (e) {
+          return new Response(JSON.stringify({ ok: false, error: "invalid json" }), {
+            status: 400, headers: { "Content-Type": "application/json", ...corsHeaders },
+          });
+        }
         if (!visitorId || !message) {
-          return new Response(JSON.stringify({ error: "visitorId and message required" }), {
-            status: 400,
-            headers: { "Content-Type": "application/json", ...corsHeaders },
+          return new Response(JSON.stringify({ ok: false, error: "visitorId and message required" }), {
+            status: 400, headers: { "Content-Type": "application/json", ...corsHeaders },
           });
         }
 
         const ts = Date.now();
-        const msgKey = `msg:${visitorId}`;
+        const msgKey = "msg:" + visitorId;
 
         let existing = [];
         try {
-          const raw = await MESSAGES.get(msgKey);
+          const raw = await MESSAGES.get(msgKey, { cacheTtl: 0 });
           if (raw) existing = JSON.parse(raw);
-        } catch {}
+        } catch (e) {
+          // KV read failed, start fresh
+        }
 
         const newMsg = { role: "visitor", name: name || "Клиент", message, ts };
         existing.push(newMsg);
-        await MESSAGES.put(msgKey, JSON.stringify(existing), { expirationTtl: 2592000 });
 
-        // Forward to Telegram — embed visitorId in the message itself
-        // Format: [visitorId]\n✉️ *sender*\n\nmessage
+        try {
+          await MESSAGES.put(msgKey, JSON.stringify(existing), { expirationTtl: 2592000 });
+        } catch (e) {
+          return new Response(JSON.stringify({ ok: false, error: "kv write failed" }), {
+            status: 500, headers: { "Content-Type": "application/json", ...corsHeaders },
+          });
+        }
+
+        // Forward to Telegram in background
         const sender = name || "Клиент";
+        // Escape Markdown special characters in the message
+        const escapedMsg = message.replace(/[_*[\]()~`>#+\-=|{}.!]/g, "\\$&");
         context.waitUntil(
-          fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          fetch("https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               chat_id: parseInt(TELEGRAM_CHAT_ID, 10),
-              text: `[${visitorId}]\n\u2709\ufe0f *${sender}*\n\n${message}`,
+              text: "[" + visitorId + "]\n\u2709\ufe0f *" + sender + "*\n\n" + escapedMsg,
               parse_mode: "Markdown",
             }),
           }).catch(() => {})
@@ -66,17 +92,18 @@ export default {
       if (path === "/api/messages" && method === "GET") {
         const visitorId = url.searchParams.get("visitorId");
         if (!visitorId) {
-          return new Response(JSON.stringify({ error: "visitorId required" }), {
-            status: 400,
-            headers: { "Content-Type": "application/json", ...corsHeaders },
+          return new Response(JSON.stringify({ ok: false, error: "visitorId required" }), {
+            status: 400, headers: { "Content-Type": "application/json", ...corsHeaders },
           });
         }
 
         let messages = [];
         try {
-          const raw = await MESSAGES.get(`msg:${visitorId}`, { cacheTtl: 0 });
+          const raw = await MESSAGES.get("msg:" + visitorId, { cacheTtl: 0 });
           if (raw) messages = JSON.parse(raw);
-        } catch {}
+        } catch (e) {
+          // return empty messages on error
+        }
 
         return new Response(JSON.stringify({ messages }), {
           headers: { "Content-Type": "application/json", ...corsHeaders },
@@ -85,7 +112,13 @@ export default {
 
       // ---------- POST /api/telegram-webhook — Telegram replies ----------
       if (path === "/api/telegram-webhook" && method === "POST") {
-        const body = await request.json();
+        let body;
+        try {
+          body = await request.json();
+        } catch (e) {
+          return new Response("ok", { status: 200 });
+        }
+
         const msg = body.message || body.edited_message;
         if (!msg || !msg.reply_to_message) {
           return new Response("ok", { status: 200 });
@@ -97,7 +130,6 @@ export default {
         }
 
         // Extract visitorId from the replied-to message text
-        // Format: [uuid]\n✉️ *name*\n\nmessage
         const repliedText = msg.reply_to_message.text || msg.reply_to_message.caption || "";
         const match = repliedText.match(/^\[([a-f0-9\-]{36})\]/);
         if (!match) {
@@ -105,12 +137,12 @@ export default {
         }
         const visitorId = match[1];
 
-        const msgKey = `msg:${visitorId}`;
+        const msgKey = "msg:" + visitorId;
         let existing = [];
         try {
-          const raw = await MESSAGES.get(msgKey);
+          const raw = await MESSAGES.get(msgKey, { cacheTtl: 0 });
           if (raw) existing = JSON.parse(raw);
-        } catch {}
+        } catch (e) {}
 
         existing.push({
           role: "operator",
@@ -118,19 +150,20 @@ export default {
           message: replyText,
           ts: Date.now(),
         });
-        await MESSAGES.put(msgKey, JSON.stringify(existing), { expirationTtl: 2592000 });
+
+        try {
+          await MESSAGES.put(msgKey, JSON.stringify(existing), { expirationTtl: 2592000 });
+        } catch (e) {}
 
         return new Response("ok", { status: 200 });
       }
 
-      return new Response(JSON.stringify({ error: "not found" }), {
-        status: 404,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
+      return new Response(JSON.stringify({ ok: false, error: "not found" }), {
+        status: 404, headers: { "Content-Type": "application/json", ...corsHeaders },
       });
     } catch (err) {
-      return new Response(JSON.stringify({ error: err.message }), {
-        status: 500,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
+      return new Response(JSON.stringify({ ok: false, error: err.message }), {
+        status: 500, headers: { "Content-Type": "application/json", ...corsHeaders },
       });
     }
   },

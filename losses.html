@@ -432,10 +432,13 @@
 .chat-input-area button:hover { background: #1a4f5c; }
 .chat-input-area button:disabled { opacity: 0.5; cursor: not-allowed; }
 @media (max-width: 480px) {
-  .chat-btn { bottom: 16px; right: 16px; width: 90px; height: 90px; }
-  .chat-btn svg { width: 100%; height: 100%; display: block; }
-  .chat-widget { bottom: 120px; right: 8px; width: calc(100vw - 16px); height: 60vh; }
+  .chat-btn { bottom: 12px; right: 12px; width: 90px; height: 90px; }
+  .chat-widget { bottom: 116px; right: 6px; width: calc(100vw - 12px); height: 55vh; }
   .chat-logo-wrap { width: 44px; height: 44px; }
+  .chat-header { padding: 8px 12px; }
+  .chat-messages { padding: 10px; }
+  .chat-input-area { padding: 8px 12px; }
+  .chat-msg { font-size: 0.9rem; padding: 8px 12px; }
 }</style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -590,33 +593,11 @@
   </div>
 </footer>
 
-<button class="chat-btn" id="chatBtn" aria-label="Чат">
-  <svg viewBox="0 0 140 140">
-    <circle cx="70" cy="70" r="66" fill="#1a4f5c"/>
-    <text x="70" y="33" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="800" fill="#F8FAFA" letter-spacing="3">ЧАТ</text>
-    <g transform="translate(70,72)" fill="none" stroke="#F8FAFA" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M-12-4a4 4 0 0 0-4 4v13a6.5 6.5 0 0 0 13 0V-7a5.5 5.5 0 0 0-11 0v17a3.5 3.5 0 0 0 7 0V0"/>
-    </g>
-    <text x="70" y="105" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#F8FAFA" letter-spacing="1">Контакты</text>
-    <text x="70" y="119" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#F8FAFA" letter-spacing="1">не требуются</text>
-  </svg>
-</button>
+<button class="chat-btn" id="chatBtn" aria-label="Чат"><svg viewBox="0 0 140 140"><circle cx="70" cy="70" r="66" fill="#1a4f5c"/><text x="70" y="32" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#F8FAFA" letter-spacing="2">ЧАТ</text><g transform="translate(70,68)" fill="none" stroke="#F8FAFA" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M-10-3a3 3 0 0 0-3 3v10a5 5 0 0 0 10 0V-5a4 4 0 0 0-8 0v13a2 2 0 0 0 4 0V0"/></g><text x="70" y="100" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#F8FAFA" letter-spacing="1">контакты</text><text x="70" y="117" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#F8FAFA" letter-spacing="1">не требуются</text></svg></button>
 
 <div class="chat-widget" id="chatWidget">
   <div class="chat-header">
-    <div class="chat-logo-wrap">
-      <svg viewBox="0 0 120 120" class="chat-logo-svg">
-        <defs><path id="chat-arc" d="M 60 14 A 46 46 0 1 1 59.9 14"/></defs>
-        <circle cx="60" cy="60" r="50" fill="#1a4f5c"/>
-        <circle cx="60" cy="60" r="46" fill="none" stroke="#F8FAFA" stroke-width="1.2"/>
-        <text font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#F8FAFA" letter-spacing="0.3">
-          <textPath href="#chat-arc" startOffset="10%">Чат! Контакты не требуются</textPath>
-        </text>
-        <g transform="translate(60,60)" fill="none" stroke="#F8FAFA" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M-10-3a3 3 0 0 0-3 3v10a5 5 0 0 0 10 0V-5a4 4 0 0 0-8 0v13a2 2 0 0 0 4 0V0"/>
-        </g>
-      </svg>
-    </div>
+    <div class="chat-logo-wrap"><svg viewBox="0 0 120 120" class="chat-logo-svg"><circle cx="60" cy="60" r="50" fill="#1a4f5c"/><circle cx="60" cy="60" r="46" fill="none" stroke="#F8FAFA" stroke-width="1.2"/><g transform="translate(60,60)" fill="none" stroke="#F8FAFA" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M-12-4a4 4 0 0 0-4 4v13a6.5 6.5 0 0 0 13 0V-7a5.5 5.5 0 0 0-11 0v17a3.5 3.5 0 0 0 7 0V0"/></g></svg></div>
     <div class="chat-header-info">
       <span class="chat-header-title">Скрепыч 📎</span>
     </div>
