@@ -2,24 +2,6 @@
 // KV namespace: MESSAGES
 // Secrets: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
 
-function sendTelegram(botToken, chatId, text) {
-  const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-  return fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ chat_id: parseInt(chatId, 10), text, parse_mode: "Markdown" }),
-  }).then(r => r.json());
-}
-
-function replyToTelegram(botToken, chatId, replyToMessageId, text) {
-  const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-  return fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ chat_id: chatId, text, reply_to_message_id: replyToMessageId, parse_mode: "Markdown" }),
-  }).then(r => r.json());
-}
-
 export default {
   async fetch(request, env, context) {
     const { MESSAGES, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID } = env;
@@ -27,7 +9,6 @@ export default {
     const path = url.pathname;
     const method = request.method;
 
-    // ---------- CORS headers for widget ----------
     const corsHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
@@ -51,7 +32,6 @@ export default {
         const ts = Date.now();
         const msgKey = `msg:${visitorId}`;
 
-        // Append message to KV
         let existing = [];
         try {
           const raw = await MESSAGES.get(msgKey);
@@ -62,21 +42,21 @@ export default {
         existing.push(newMsg);
         await MESSAGES.put(msgKey, JSON.stringify(existing), { expirationTtl: 2592000 });
 
-        // Forward to Telegram in background
+        // Forward to Telegram — embed visitorId in the message itself
+        // Format: [visitorId]\n✉️ *sender*\n\nmessage
         const sender = name || "Клиент";
         context.waitUntil(
-          sendTelegram(
-            TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID,
-            `✉️ *${sender}* (${visitorId.substring(0, 8)}…)\n\n${message}`
-          ).then(telRes => {
-            // Map Telegram message ID → visitorId
-            if (telRes.ok && telRes.result) {
-              return MESSAGES.put(`map:${telRes.result.message_id}`, visitorId, { expirationTtl: 2592000 });
-            }
+          fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              chat_id: parseInt(TELEGRAM_CHAT_ID, 10),
+              text: `[${visitorId}]\n\u2709\ufe0f *${sender}*\n\n${message}`,
+              parse_mode: "Markdown",
+            }),
           }).catch(() => {})
         );
 
-        // Respond immediately
         return new Response(JSON.stringify({ ok: true }), {
           headers: { "Content-Type": "application/json", ...corsHeaders },
         });
@@ -94,7 +74,7 @@ export default {
 
         let messages = [];
         try {
-          const raw = await MESSAGES.get(`msg:${visitorId}`);
+          const raw = await MESSAGES.get(`msg:${visitorId}`, { cacheTtl: 0 });
           if (raw) messages = JSON.parse(raw);
         } catch {}
 
@@ -106,19 +86,24 @@ export default {
       // ---------- POST /api/telegram-webhook — Telegram replies ----------
       if (path === "/api/telegram-webhook" && method === "POST") {
         const body = await request.json();
-        const msg = body.message;
+        const msg = body.message || body.edited_message;
         if (!msg || !msg.reply_to_message) {
           return new Response("ok", { status: 200 });
         }
 
-        const repliedToId = msg.reply_to_message.message_id;
         const replyText = msg.text || msg.caption || "";
-
-        // Look up visitorId via mapping
-        const visitorId = await MESSAGES.get(`map:${repliedToId}`);
-        if (!visitorId) {
+        if (!replyText) {
           return new Response("ok", { status: 200 });
         }
+
+        // Extract visitorId from the replied-to message text
+        // Format: [uuid]\n✉️ *name*\n\nmessage
+        const repliedText = msg.reply_to_message.text || msg.reply_to_message.caption || "";
+        const match = repliedText.match(/^\[([a-f0-9\-]{36})\]/);
+        if (!match) {
+          return new Response("ok", { status: 200 });
+        }
+        const visitorId = match[1];
 
         const msgKey = `msg:${visitorId}`;
         let existing = [];
@@ -129,7 +114,7 @@ export default {
 
         existing.push({
           role: "operator",
-          name: "Скрепыч 📎",
+          name: "\u0421\u043a\u0440\u0435\u043f\u044b\u0447 \ud83d\udcce",
           message: replyText,
           ts: Date.now(),
         });
@@ -138,7 +123,6 @@ export default {
         return new Response("ok", { status: 200 });
       }
 
-      // ---------- 404 ----------
       return new Response(JSON.stringify({ error: "not found" }), {
         status: 404,
         headers: { "Content-Type": "application/json", ...corsHeaders },
