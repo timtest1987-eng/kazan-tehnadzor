@@ -1,6 +1,9 @@
 // Cloudflare Worker — Telegram Chat Bridge
-// KV namespace: MESSAGES
+// KV namespace: MESSAGES (used only as backup, reads from memory)
 // Secrets: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
+
+// In-memory message cache to avoid KV reads on every poll
+const msgCache = new Map();
 
 export default {
   async fetch(request, env, context) {
@@ -19,7 +22,7 @@ export default {
     }
 
     try {
-      // ---------- GET /api/health — quick check ----------
+      // ---------- GET /api/health ----------
       if (path === "/api/health") {
         return new Response(JSON.stringify({ ok: true, t: Date.now() }), {
           headers: { "Content-Type": "application/json", ...corsHeaders },
@@ -46,30 +49,29 @@ export default {
         }
 
         const ts = Date.now();
-        const msgKey = "msg:" + visitorId;
 
-        let existing = [];
-        try {
-          const raw = await MESSAGES.get(msgKey, { cacheTtl: 0 });
-          if (raw) existing = JSON.parse(raw);
-        } catch (e) {
-          // KV read failed, start fresh
+        // Load from memory cache
+        let existing = msgCache.get(visitorId);
+        if (!existing) {
+          // Cold start — load from KV
+          existing = [];
+          try {
+            const raw = await MESSAGES.get("msg:" + visitorId, { cacheTtl: 0 });
+            if (raw) existing = JSON.parse(raw);
+          } catch (e) {}
+          msgCache.set(visitorId, existing);
         }
 
         const newMsg = { role: "visitor", name: name || "Клиент", message, ts };
         existing.push(newMsg);
 
-        try {
-          await MESSAGES.put(msgKey, JSON.stringify(existing), { expirationTtl: 2592000 });
-        } catch (e) {
-          return new Response(JSON.stringify({ ok: false, error: "kv write failed" }), {
-            status: 500, headers: { "Content-Type": "application/json", ...corsHeaders },
-          });
-        }
+        // Write to KV asynchronously (backup)
+        context.waitUntil(
+          MESSAGES.put("msg:" + visitorId, JSON.stringify(existing), { expirationTtl: 2592000 }).catch(() => {})
+        );
 
         // Forward to Telegram in background
         const sender = name || "Клиент";
-        // Escape Markdown special characters in the message
         const escapedMsg = message.replace(/[_*[\]()~`>#+\-=|{}.!]/g, "\\$&");
         context.waitUntil(
           fetch("https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage", {
@@ -97,12 +99,16 @@ export default {
           });
         }
 
-        let messages = [];
-        try {
-          const raw = await MESSAGES.get("msg:" + visitorId, { cacheTtl: 0 });
-          if (raw) messages = JSON.parse(raw);
-        } catch (e) {
-          // return empty messages on error
+        // Serve from memory cache — no KV read
+        let messages = msgCache.get(visitorId);
+        if (!messages) {
+          messages = [];
+          // Cold start — try KV
+          try {
+            const raw = await MESSAGES.get("msg:" + visitorId, { cacheTtl: 0 });
+            if (raw) messages = JSON.parse(raw);
+          } catch (e) {}
+          msgCache.set(visitorId, messages);
         }
 
         return new Response(JSON.stringify({ messages }), {
@@ -129,7 +135,6 @@ export default {
           return new Response("ok", { status: 200 });
         }
 
-        // Extract visitorId from the replied-to message text
         const repliedText = msg.reply_to_message.text || msg.reply_to_message.caption || "";
         const match = repliedText.match(/^\[([a-f0-9\-]{36})\]/);
         if (!match) {
@@ -137,12 +142,16 @@ export default {
         }
         const visitorId = match[1];
 
-        const msgKey = "msg:" + visitorId;
-        let existing = [];
-        try {
-          const raw = await MESSAGES.get(msgKey, { cacheTtl: 0 });
-          if (raw) existing = JSON.parse(raw);
-        } catch (e) {}
+        // Update memory cache
+        let existing = msgCache.get(visitorId);
+        if (!existing) {
+          existing = [];
+          try {
+            const raw = await MESSAGES.get("msg:" + visitorId, { cacheTtl: 0 });
+            if (raw) existing = JSON.parse(raw);
+          } catch (e) {}
+          msgCache.set(visitorId, existing);
+        }
 
         existing.push({
           role: "operator",
@@ -151,9 +160,10 @@ export default {
           ts: Date.now(),
         });
 
-        try {
-          await MESSAGES.put(msgKey, JSON.stringify(existing), { expirationTtl: 2592000 });
-        } catch (e) {}
+        // Persist to KV in background
+        context.waitUntil(
+          MESSAGES.put("msg:" + visitorId, JSON.stringify(existing), { expirationTtl: 2592000 }).catch(() => {})
+        );
 
         return new Response("ok", { status: 200 });
       }
