@@ -523,8 +523,8 @@
   position: fixed;
   bottom: 32px;
   right: 32px;
-  width: 120px;
-  height: 120px;
+  width: 140px;
+  height: 140px;
   background: transparent;
   border: none;
   border-radius: 50%;
@@ -545,7 +545,7 @@
 .chat-btn svg { width: 100%; height: 100%; display: block; }
 .chat-widget {
   position: fixed;
-  bottom: 170px;
+  bottom: 195px;
   right: 24px;
   width: 360px;
   max-width: calc(100vw - 48px);
@@ -612,9 +612,9 @@
 .chat-input-area button:hover { background: #1a4f5c; }
 .chat-input-area button:disabled { opacity: 0.5; cursor: not-allowed; }
 @media (max-width: 480px) {
-  .chat-btn { bottom: 16px; right: 16px; width: 80px; height: 80px; }
+  .chat-btn { bottom: 16px; right: 16px; width: 90px; height: 90px; }
   .chat-btn svg { width: 100%; height: 100%; display: block; }
-  .chat-widget { bottom: 110px; right: 8px; width: calc(100vw - 16px); height: 60vh; }
+  .chat-widget { bottom: 120px; right: 8px; width: calc(100vw - 16px); height: 60vh; }
   .chat-logo-wrap { width: 44px; height: 44px; }
 }
 </style>
@@ -777,15 +777,20 @@
 </footer>
 
 <button class="chat-btn" id="chatBtn" aria-label="Чат">
-  <svg viewBox="0 0 120 120">
-    <defs><path id="btn-arc" d="M 60 14 A 46 46 0 1 1 59.9 14"/></defs>
-    <circle cx="60" cy="60" r="56" fill="#1a4f5c"/>
-    <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(248,250,250,0.25)" stroke-width="1"/>
-    <text font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#F8FAFA" letter-spacing="1.5">
-      <textPath href="#btn-arc" startOffset="8%">Чат! Контакты не требуются</textPath>
+  <svg viewBox="0 0 140 140">
+    <defs>
+      <path id="top-arc" d="M 22 42 A 56 56 0 0 0 118 42"/>
+      <path id="bottom-arc" d="M 22 98 A 56 56 0 0 1 118 98"/>
+    </defs>
+    <circle cx="70" cy="70" r="66" fill="#1a4f5c"/>
+    <text font-family="Arial,sans-serif" font-size="20" font-weight="800" fill="#F8FAFA" letter-spacing="2">
+      <textPath href="#top-arc" startOffset="38%">Чат!</textPath>
     </text>
-    <g transform="translate(60,62)" fill="none" stroke="#F8FAFA" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M-10-3a3 3 0 0 0-3 3v10a5 5 0 0 0 10 0V-5a4 4 0 0 0-8 0v13a2 2 0 0 0 4 0V0"/>
+    <text font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#F8FAFA" letter-spacing="1.5">
+      <textPath href="#bottom-arc" startOffset="14%">Контакты не требуются</textPath>
+    </text>
+    <g transform="translate(70,76)" fill="none" stroke="#F8FAFA" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M-12-4a4 4 0 0 0-4 4v13a6.5 6.5 0 0 0 13 0V-7a5.5 5.5 0 0 0-11 0v17a3.5 3.5 0 0 0 7 0V0"/>
     </g>
   </svg>
 </button>
@@ -855,7 +860,7 @@ setTimeout(function(){if(!sessionStorage.getItem('modalShown')){sessionStorage.s
 <script>
 try{emailjs.init('-S1e762arpbUov2ic');}catch(e){}
 function sendRequest(e){e.preventDefault();const b=document.getElementById('submitBtn'),s=document.getElementById('formStatus');b.disabled=true;b.textContent='Отправка...';try{emailjs.send('service_c2yal7e','template_q3t7rj8',{name:document.getElementById('name').value,phone:document.getElementById('phone').value,email:document.getElementById('email').value,description:document.getElementById('description').value}).then(()=>{s.textContent='Заявка отправлена! Мы свяжемся с вами в ближайшее время.';s.className='form-status';document.getElementById('requestForm').reset();setTimeout(closeModal,2000);}).catch(()=>{s.textContent='Ошибка отправки. Попробуйте позже или напишите на info@technadzorkazan.ru';s.className='form-status error';}).finally(()=>{b.disabled=false;b.textContent='Отправить';});}catch(e){s.textContent='Ошибка отправки. Напишите на info@technadzorkazan.ru';s.className='form-status error';b.disabled=false;b.textContent='Отправить';}}
-(function(){var b=document.getElementById('chatBtn'),w=document.getElementById('chatWidget'),c=document.getElementById('chatClose'),i=document.getElementById('chatInput'),s=document.getElementById('chatSend'),m=document.getElementById('chatMessages');if(!b||!w)return;function t(){w.classList.toggle('open');if(w.classList.contains('open')){i.focus();m.scrollTop=m.scrollHeight}}b.addEventListener('click',t);c.addEventListener('click',t);function a(t,e){var n=document.createElement('div');n.className='chat-msg '+e;n.textContent=t;m.appendChild(n);m.scrollTop=m.scrollHeight}function d(){var t=i.value.trim();if(!t)return;a(t,'user');i.value='';s.disabled=true;try{emailjs.send('service_c2yal7e','template_q3t7rj8',{name:'Чат (аноним)',phone:'\u2014',email:'\u2014',description:'\u0421\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0435 \u0438\u0437 \u0447\u0430\u0442\u0430:\n'+t}).then(function(){a('\u2705 \u0421\u043f\u0430\u0441\u0438\u0431\u043e! \u041c\u044b \u043f\u043e\u043b\u0443\u0447\u0438\u043b\u0438 \u0432\u0430\u0448\u0435 \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0435 \u0438 \u043e\u0442\u0432\u0435\u0442\u0438\u043c \u0432 \u0431\u043b\u0438\u0436\u0430\u0439\u0448\u0435\u0435 \u0432\u0440\u0435\u043c\u044f.','bot')}).catch(function(){a('\u274c \u041e\u0448\u0438\u0431\u043a\u0430 \u043e\u0442\u043f\u0440\u0430\u0432\u043a\u0438. \u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439\u0442\u0435 \u043f\u043e\u0437\u0436\u0435 \u0438\u043b\u0438 \u043d\u0430\u043f\u0438\u0448\u0438\u0442\u0435 \u043d\u0430 info@technadzorkazan.ru','bot')}).finally(function(){s.disabled=false;i.focus()})}catch(e){a('\u274c \u041e\u0448\u0438\u0431\u043a\u0430 \u043e\u0442\u043f\u0440\u0430\u0432\u043a\u0438.','bot');s.disabled=false;i.focus()}}s.addEventListener('click',d);i.addEventListener('keydown',function(e){if(e.key==='Enter')d()})})();</script>
+(function(){var wrk='https://telegram-chat.timtest1987.workers.dev',vid=localStorage.getItem('ch_vid');if(!vid){vid=crypto.randomUUID();localStorage.setItem('ch_vid',vid)}var b=document.getElementById('chatBtn'),w=document.getElementById('chatWidget'),c=document.getElementById('chatClose'),i=document.getElementById('chatInput'),s=document.getElementById('chatSend'),m=document.getElementById('chatMessages'),lt=0;if(!b||!w)return;function tg(){w.classList.toggle('open');if(w.classList.contains('open')){i.focus();pl();m.scrollTop=m.scrollHeight}}b.addEventListener('click',tg);c.addEventListener('click',tg);function am(t,e){var n=document.createElement('div');n.className='chat-msg '+e;n.textContent=t;m.appendChild(n);m.scrollTop=m.scrollHeight}function pl(){fetch(wrk+'/api/messages?visitorId='+encodeURIComponent(vid)).then(function(r){return r.json()}).then(function(d){if(!d.messages)return;for(var i=0;i<d.messages.length;i++){var g=d.messages[i];if(g.ts<=lt)continue;if(g.ts>lt)lt=g.ts;if(g.role==='operator'){am('['+g.name+'] '+g.message,'bot')}}}).catch(function(){})}function sd(){var t=i.value.trim();if(!t)return;am(t,'user');i.value='';s.disabled=true;fetch(wrk+'/api/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({visitorId:vid,message:t})}).then(function(r){return r.json()}).then(function(d){if(d.ok){am('✅ Отправлено! Ждите ответ.','bot');pl()}else{am('❌ Ошибка отправки. Попробуйте позже.','bot')}}).catch(function(){am('❌ Ошибка отправки. Попробуйте позже.','bot')}).finally(function(){s.disabled=false;i.focus()})}s.addEventListener('click',sd);i.addEventListener('keydown',function(e){if(e.key==='Enter')sd()});setInterval(pl,3000);setTimeout(pl,1000)})();</script>
 
 </body>
 </html>

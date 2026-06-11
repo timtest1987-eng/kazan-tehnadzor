@@ -1,0 +1,8 @@
+name = "telegram-chat"
+main = "src/index.js"
+compatibility_date = "2025-04-01"
+
+[[kv_namespaces]]
+binding = "MESSAGES"
+id = ""
+preview_id = ""
