@@ -1,3 +1,7 @@
-name = "vk-chat"
+name = "telegram-chat"
 main = "worker.js"
 compatibility_date = "2025-04-01"
+
+kv_namespaces = [
+  { binding = "MESSAGES", id = "44e44195a7f842d78b90a1f5e6da5d99" }
+]
