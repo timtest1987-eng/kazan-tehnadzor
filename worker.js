@@ -20,9 +20,29 @@ export default {
     try {
       // GET /api/health
       if (path === "/api/health") {
-        return new Response(JSON.stringify({ ok: true, t: Date.now() }), {
+        return new Response(JSON.stringify({ ok: true, t: Date.now(), hasKv: !!MESSAGES }), {
           headers: { "Content-Type": "application/json", ...corsHeaders },
         });
+      }
+
+      // GET /api/debug/:key
+      if (path === "/api/debug" && method === "GET") {
+        const key = url.searchParams.get("key");
+        if (!key) {
+          return new Response(JSON.stringify({ ok: false, error: "key required" }), {
+            status: 400, headers: { "Content-Type": "application/json", ...corsHeaders },
+          });
+        }
+        try {
+          const raw = await MESSAGES.get(key, { cacheTtl: 0 });
+          return new Response(JSON.stringify({ ok: true, key, value: raw }), {
+            headers: { "Content-Type": "application/json", ...corsHeaders },
+          });
+        } catch (e) {
+          return new Response(JSON.stringify({ ok: false, error: e.message }), {
+            status: 500, headers: { "Content-Type": "application/json", ...corsHeaders },
+          });
+        }
       }
 
       // POST /api/send — widget sends a message
