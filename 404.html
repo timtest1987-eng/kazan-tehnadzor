@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>404 — Страница не найдена | Независимый технадзор Казань</title>
+<title>404 вЂ” РЎС‚СЂР°РЅРёС†Р° РЅРµ РЅР°Р№РґРµРЅР° | РќРµР·Р°РІРёСЃРёРјС‹Р№ С‚РµС…РЅР°РґР·РѕСЂ РљР°Р·Р°РЅСЊ</title>
 <meta name="robots" content="noindex, follow">
 <link rel="canonical" href="https://technadzorkazan.ru/404.html">
 <style>
@@ -41,16 +41,228 @@
   }
 
 
+<style>
+/* Floating Chat Button */
+.chat-btn {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 140px;
+  height: 140px;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  font-size: 0;
+  cursor: pointer;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+  padding: 0;
+  filter: drop-shadow(0 6px 20px rgba(35, 101, 117, 0.5));
+}
+.chat-btn:hover {
+  transform: scale(1.08);
+  filter: drop-shadow(0 8px 28px rgba(35, 101, 117, 0.6));
+}
+.chat-btn svg { width: 100%; height: 100%; display: block; }
+.chat-widget {
+  position: fixed;
+  bottom: 195px;
+  right: 24px;
+  width: 360px;
+  max-width: calc(100vw - 48px);
+  height: 520px;
+  max-height: calc(100vh - 120px);
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+  z-index: 998;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+}
+.chat-widget.open { display: flex; }
+.chat-header {
+  background: #236575;
+  color: #F8FAFA;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.chat-logo-wrap { flex-shrink: 0; width: 56px; height: 56px; }
+.chat-logo-svg { width: 100%; height: 100%; display: block; }
+.chat-header-info { flex: 1; min-width: 0; }
+.chat-header-title { font-weight: 700; font-size: 1.1rem; }
+.chat-close {
+  background: none; border: none; color: #F8FAFA;
+  font-size: 22px; cursor: pointer; opacity: 0.7;
+  transition: opacity 0.2s; padding: 0; line-height: 1; flex-shrink: 0;
+}
+.chat-close:hover { opacity: 1; }
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 16px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.chat-msg {
+  max-width: 85%; padding: 10px 14px; border-radius: 12px;
+  font-size: 0.95rem; line-height: 1.5; word-wrap: break-word;
+}
+.chat-msg.user {
+  background: #236575; color: #F8FAFA;
+  align-self: flex-end; border-bottom-right-radius: 4px;
+}
+.chat-msg.bot {
+  background: #e8f0ed; color: #1A2B2E;
+  align-self: flex-start; border-bottom-left-radius: 4px;
+}
+.chat-input-area {
+  display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid #dde5e2;
+}
+.chat-input-area input {
+  flex: 1; border: 1px solid #d0d8d5; border-radius: 24px;
+  padding: 10px 16px; font-size: 0.95rem; font-family: inherit;
+  outline: none; transition: border-color 0.2s;
+}
+.chat-input-area input:focus { border-color: #236575; }
+.chat-input-area button {
+  background: #236575; color: #F8FAFA; border: none; border-radius: 50%;
+  width: 40px; height: 40px; font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s; flex-shrink: 0;
+}
+.chat-input-area button:hover { background: #1a4f5c; }
+.chat-input-area button:disabled { opacity: 0.5; cursor: not-allowed; }
+@media (max-width: 480px) {
+  .chat-btn { bottom: 16px; right: 16px; width: 90px; height: 90px; }
+  .chat-btn svg { width: 100%; height: 100%; display: block; }
+  .chat-widget { bottom: 120px; right: 8px; width: calc(100vw - 16px); height: 60vh; }
+  .chat-logo-wrap { width: 44px; height: 44px; }
+}
 </style>
 </head>
 <body>
   <div class="code">4<span>0</span>4</div>
-  <h1>Страница не найдена</h1>
-  <p>Возможно, страница была перемещена или удалена. Начните с главной — там есть вся информация о наших услугах.</p>
-  <a href="https://technadzorkazan.ru/" class="btn">&larr; На главную</a>
+  <h1>РЎС‚СЂР°РЅРёС†Р° РЅРµ РЅР°Р№РґРµРЅР°</h1>
+  <p>Р’РѕР·РјРѕР¶РЅРѕ, СЃС‚СЂР°РЅРёС†Р° Р±С‹Р»Р° РїРµСЂРµРјРµС‰РµРЅР° РёР»Рё СѓРґР°Р»РµРЅР°. РќР°С‡РЅРёС‚Рµ СЃ РіР»Р°РІРЅРѕР№ вЂ” С‚Р°Рј РµСЃС‚СЊ РІСЃСЏ РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ РЅР°С€РёС… СѓСЃР»СѓРіР°С….</p>
+  <a href="https://technadzorkazan.ru/" class="btn">&larr; РќР° РіР»Р°РІРЅСѓСЋ</a>
 
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
 try{emailjs.init('-S1e762arpbUov2ic');}catch(e){}
+
+<button class="chat-btn" id="chatBtn" aria-label="Р§Р°С‚"><svg viewBox="0 0 140 140"><circle cx="70" cy="70" r="66" fill="#1a4f5c"/><text x="70" y="33" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#F8FAFA">Р§РђРў</text><g transform="translate(70,67)" fill="none" stroke="#F8FAFA" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M-9-2.5a2.5 2.5 0 0 0-2.5 2.5v9a4.5 4.5 0 0 0 9 0V-4.5a3.5 3.5 0 0 0-7 0v11.5a1.5 1.5 0 0 0 3 0V0"/></g><text x="70" y="96" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#F8FAFA">РєРѕРЅС‚Р°РєС‚С‹</text><text x="70" y="111" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#F8FAFA">РЅРµ С‚СЂРµР±СѓСЋС‚СЃСЏ</text></svg></button>
+
+<div class="chat-widget" id="chatWidget">
+  <div class="chat-header">
+    <div class="chat-logo-wrap"><svg viewBox="0 0 120 120" class="chat-logo-svg"><circle cx="60" cy="60" r="50" fill="#1a4f5c"/><circle cx="60" cy="60" r="46" fill="none" stroke="#F8FAFA" stroke-width="1.2"/><g transform="translate(60,60)" fill="none" stroke="#F8FAFA" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M-12-4a4 4 0 0 0-4 4v13a6.5 6.5 0 0 0 13 0V-7a5.5 5.5 0 0 0-11 0v17a3.5 3.5 0 0 0 7 0V0"/></g></svg></div>
+    <div class="chat-header-info">
+      <span class="chat-header-title">РЎРєСЂРµРїС‹С‡ рџ“Ћ</span>
+    </div>
+    <button class="chat-close" id="chatClose">&times;</button>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-msg bot">
+      <div style="font-weight:700;margin-bottom:4px;">РЎРєСЂРµРїС‹С‡ рџ“Ћ</div>
+      РџСЂРёРІРµС‚! РЎРµР№С‡Р°СЃ РµРґРёРЅСЃС‚РІРµРЅРЅС‹Р№ СЃРїРѕСЃРѕР± СЃРІСЏР·Р°С‚СЊСЃСЏ вЂ” СЌС‚РѕС‚ С‡Р°С‚.<br><br>
+      РќР°РїРёС€РёС‚Рµ РІР°С€ РІРѕРїСЂРѕСЃ вЂ” СЏ РѕС‚РІРµС‡Сѓ РІ СЂР°Р±РѕС‡РёРµ С‡Р°СЃС‹.
+    </div>
+  </div>
+  <div class="chat-input-area">
+    <input type="text" id="chatInput" placeholder="Р’Р°С€Рµ СЃРѕРѕР±С‰РµРЅРёРµ..." autocomplete="off">
+    <button id="chatSend">вћ¤</button>
+  </div>
+</div>
+<script>
+(function() {
+  var wrk = 'https://telegram-chat.timtest1987.workers.dev';
+  var vid = localStorage.getItem('ch_vid') || crypto.randomUUID();
+  localStorage.setItem('ch_vid', vid);
+  var b = document.getElementById('chatBtn');
+  var w = document.getElementById('chatWidget');
+  var c = document.getElementById('chatClose');
+  var i = document.getElementById('chatInput');
+  var s = document.getElementById('chatSend');
+  var m = document.getElementById('chatMessages');
+  var lt = parseInt(localStorage.getItem('ch_ts') || '0');
+  var sending = 0;
+  if (!b || !w) return;
+  function tg() {
+    w.classList.toggle('open');
+    if (w.classList.contains('open')) { i.focus(); poll(); m.scrollTop = m.scrollHeight; }
+  }
+  b.addEventListener('click', tg);
+  c.addEventListener('click', tg);
+  function addMsg(nm, txt, cls) {
+    var d = document.createElement('div');
+    d.className = 'chat-msg ' + cls;
+    if (nm) {
+      var l = document.createElement('div');
+      l.style.fontWeight = '700';
+      l.style.marginBottom = '4px';
+      l.textContent = nm;
+      d.appendChild(l);
+    }
+    var p = document.createElement('div');
+    p.textContent = txt;
+    d.appendChild(p);
+    m.appendChild(d);
+    m.scrollTop = m.scrollHeight;
+  }
+  function poll() {
+    fetch(wrk + '/api/messages?visitorId=' + encodeURIComponent(vid))
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (!d.messages) return;
+        for (var i = 0; i < d.messages.length; i++) {
+          var g = d.messages[i];
+          if (g.ts <= lt) continue;
+          lt = g.ts;
+          if (g.role === 'operator') {
+            addMsg(g.name || 'РЎРєСЂРµРїС‹С‡', 'в†’ ' + g.message, 'bot');
+          }
+        }
+        localStorage.setItem('ch_ts', lt);
+      })
+      .catch(function() {});
+  }
+  function send() {
+    if (sending || !i.value.trim()) return;
+    var t = i.value.trim();
+    sending = 1;
+    s.disabled = true;
+    addMsg(null, t, 'user');
+    i.value = '';
+    fetch(wrk + '/api/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ visitorId: vid, message: t })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d && d.ok) {
+        addMsg(null, '\u2705 \u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E!', 'bot');
+        poll();
+      } else {
+        addMsg(null, '\u274C \u041E\u0448\u0438\u0431\u043A\u0430. \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u043F\u043E\u0437\u0436\u0435.', 'bot');
+      }
+    })
+    .catch(function() {
+      addMsg(null, '\u274C \u041E\u0448\u0438\u0431\u043A\u0430 \u0441\u0435\u0440\u0432\u0435\u0440\u0430. \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u043F\u043E\u0437\u0436\u0435.', 'bot');
+    })
+    .then(function() {
+      sending = 0;
+      s.disabled = false;
+      i.focus();
+    });
+  }
+  s.addEventListener('click', send);
+  i.addEventListener('keydown', function(e) { if (e.key === 'Enter') send(); });
+  setInterval(poll, 3000);
+  setTimeout(poll, 1000);
+})();
+</script>
 </body>
 </html>
