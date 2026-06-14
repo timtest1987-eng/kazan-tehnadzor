@@ -22,21 +22,37 @@
 - Виджет: bottom: 195px (120px mobile), заголовок «Скрепыч 📎»
 - Приветствие: «Привет! Сейчас единственный способ связаться — этот чат»
 
-## Двусторонний чат (Telegram)
-- Cloudflare Worker (`worker.js`) связывает виджет с Telegram Bot API
-- KV storage: `msg:<visitorId>` → [] (TTL 30 дней), `map:<telegramMsgId>` → visitorId
-- Owner отвечает в Telegram → webhook → KV → widget polling (каждые 3 сек)
-- Для деплоя: wrangler deploy, установка секретов и webhook
-- Пока не подключено — работает EmailJS (односторонне, как раньше)
+## Двусторонний чат (VK)
+- Cloudflare Worker (`worker.js`) связывает виджет с VK API
+- KV storage: `msg:<visitorId>` → [] (TTL 30 дней)
+- Воркер отправляет сообщение посетителя оператору в VK (VK_GROUP_TOKEN → messages.send)
+- Оператор отвечает через Reply к сообщению → VK Callback API → webhook → KV → widget polling (каждые 3 сек)
+- Webhook возвращает VK_CONFIRMATION_CODE=d91f3462
+- VK_SECRET_KEY=Emma2017 (для верификации webhook), VK_OPERATOR_ID=1020120
+
+## Особенности деплоя
+- Cloudflare API из РФ недоступен — деплой через API токен (переменная окружения `CF_API_TOKEN`)
+- Secrets API не работает с этим токеном — секреты нужно добавлять через Dashboard или как `plain_text` binding
+- `deploy_proper.py` — деплой воркера (читает worker.js, формирует multipart payload)
+- `worker.js` — код воркера (ES modules, `export default { async fetch(request, env, context) }`)
+- При изменении VK_CONFIRMATION_CODE: обновить в deploy_proper.py метаданные
+
+## Деплой
+```
+python deploy_proper.py
+```
 
 ## Инструменты в корне
 - `worker.js` — код Cloudflare Worker
 - `wrangler.toml` — конфиг Wrangler (KV namespace MESSAGES)
-- `SETUP.md` — инструкция по развёртыванию Telegram-бота (во временной папке)
+- `deploy_proper.py` — скрипт деплоя через API
+- `test_worker.py` — тест health/send/messages
+- `test_confirm.py` — тест webhook confirmation
+- `gen_payload.py`, `test_deploy.py`, `set_secret.py` — вспомогательные скрипты
 
 ## Дальнейшие шаги
-1. Развернуть Cloudflare Worker (wrangler deploy)
-2. Создать бота (@BotFather), получить токен, установить webhook
-3. Обновить inline-скрипт виджета на всех страницах — заменить EmailJS на fetch к Worker
+1. Подтвердить сервер в VK (Callback API → Подтвердить)
+2. Проверить, что сообщения из виджета приходят в VK
+3. Если нет — обновить VK_GROUP_TOKEN (через Dashboard или как plain_text binding в deploy_proper.py)
 4. Запросить переобход в Яндекс.Вебмастер и Google Search Console
 5. Сжать изображения в WebP
