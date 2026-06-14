@@ -140,7 +140,10 @@ meta = json.dumps({
     "main_module": "worker.js",
     "bindings": [
         {"type": "kv_namespace", "name": "MESSAGES", "namespace_id": "44e44195a7f842d78b90a1f5e6da5d99"},
-        {"type": "plain_text", "name": "VK_CONFIRMATION_CODE", "text": "d91f3462"}
+        {"type": "plain_text", "name": "VK_CONFIRMATION_CODE", "text": "d91f3462"},
+        {"type": "plain_text", "name": "VK_GROUP_TOKEN", "text": "vk1.a.Ni14RlIFnaKJF1URa4Bh4lDt02m_4-ArdzSZjNZnJaE30hqMhq0jVHQBha0sjpB5A1fhXAccTcvWSY83ZkEMlc5bllDYdHQgaxiE_Ima_8cAnwqXJOlxKUmt6mR0_MW28hK0vZtqc0IwXXcysvt5IiZGSWSHpBlrCAv5O5uXQe4NyTS_NdntLZ-W5t92nvWFqwpB7SakSgLAniMnR1jHaA"},
+        {"type": "plain_text", "name": "VK_OPERATOR_ID", "text": "1020120"},
+        {"type": "plain_text", "name": "VK_SECRET_KEY", "text": "Emma2017"}
     ]
 })
 

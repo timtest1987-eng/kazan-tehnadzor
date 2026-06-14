@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -6,7 +6,42 @@
 <title>404 — Страница не найдена | Независимый технадзор Казань</title>
 <meta name="robots" content="noindex, follow">
 <link rel="canonical" href="https://technadzorkazan.ru/404.html">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #B1CEC1;
+    color: #1A2B2E;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+    padding: 24px;
+  }
+  .code { font-size: 6rem; font-weight: 800; color: #236575; letter-spacing: -0.05em; }
+  .code span { color: #236575; }
+  h1 { font-size: 1.5rem; margin: 8px 0 16px; color: #236575; }
+  p { max-width: 400px; opacity: 0.8; margin-bottom: 32px; line-height: 1.6; }
+  .btn {
+    display: inline-block;
+    background: #236575;
+    color: #F8FAFA;
+    padding: 14px 40px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(35, 101, 117, 0.4); }
+  @media (max-width: 768px) {
+    .code { font-size: 4rem; }
+    h1 { font-size: 1.2rem; }
+  }
 
+
+</style>
 </head>
 <body>
   <div class="code">4<span>0</span>4</div>
@@ -219,11 +254,11 @@ try{emailjs.init('-S1e762arpbUov2ic');}catch(e){}
 <button class="chat-btn" id="chatBtn" aria-label="Чат">
 <svg viewBox="0 0 140 140">
   <circle cx="70" cy="70" r="66" fill="#1a4f5c"/>
-  <text x="70" y="30" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" font-weight="700" fill="#F8FAFA">ЧАТ</text>
-  <g transform="translate(70,68)" fill="none" stroke="#F8FAFA" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M-10-3a3 3 0 0 0-3 3v11a5.5 5.5 0 0 0 11 0V-5.5a4.5 4.5 0 0 0-9 0v14a2 2 0 0 0 4 0V0"/>
+  <text x="70" y="36" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" font-weight="700" fill="#F8FAFA">ЧАТ</text>
+  <g transform="translate(70,74)" fill="none" stroke="#F8FAFA" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M-10,-2 C-10,-7 -6,-10 0,-10 C6,-10 10,-7 10,-2 L10,9 C10,14 6,17 0,17 C-6,17 -10,14 -10,9 L-10,-1 C-10,-4 -8,-6 -5,-6 C-2,-6 0,-4 0,-1 L0,8"/>
   </g>
-  <text x="70" y="112" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#F8FAFA">ЖДЁТ</text>
+  <text x="70" y="116" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#F8FAFA">ЖДЁТ</text>
 </svg>
 </button>
 
