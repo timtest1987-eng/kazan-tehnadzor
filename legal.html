@@ -999,6 +999,9 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
   function hideChat() {
     w.classList.remove('open');
     if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    if (!inviteShown && !inviteTimer) {
+      inviteTimer = setTimeout(showInvite, 15000);
+    }
   }
 
   function toggleChat() {
@@ -1012,7 +1015,7 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
   }
 
   function showInvite() {
-    if (!w.classList.contains('open') && !inviteShown) {
+    if (!inviteShown) {
       inv.classList.add('show');
       inviteShown = true;
     }
@@ -1114,8 +1117,6 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
   i.addEventListener('keydown', function(e) { if (e.key === 'Enter') send(); });
   ni.addEventListener('keydown', function(e) { if (e.key === 'Enter') setName(); });
   nb.addEventListener('click', setName);
-
-  inviteTimer = setTimeout(showInvite, 15000);
 })();
 </script>
 
