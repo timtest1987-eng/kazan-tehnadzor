@@ -664,6 +664,106 @@
   .chat-widget { bottom: 120px; right: 8px; width: calc(100vw - 16px); height: 60vh; }
   .chat-logo-wrap { width: 44px; height: 44px; }
 }
+<style>
+/* Floating Chat Button */
+.chat-btn {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 140px;
+  height: 140px;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  font-size: 0;
+  cursor: pointer;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+  padding: 0;
+  filter: drop-shadow(0 6px 20px rgba(35, 101, 117, 0.5));
+}
+.chat-btn:hover {
+  transform: scale(1.08);
+  filter: drop-shadow(0 8px 28px rgba(35, 101, 117, 0.6));
+}
+.chat-btn svg { width: 100%; height: 100%; display: block; }
+.chat-widget {
+  position: fixed;
+  bottom: 195px;
+  right: 24px;
+  width: 360px;
+  max-width: calc(100vw - 48px);
+  height: 520px;
+  max-height: calc(100vh - 120px);
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+  z-index: 998;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+}
+.chat-widget.open { display: flex; }
+.chat-header {
+  background: #236575;
+  color: #F8FAFA;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.chat-logo-wrap { flex-shrink: 0; width: 56px; height: 56px; }
+.chat-logo-svg { width: 100%; height: 100%; display: block; }
+.chat-header-info { flex: 1; min-width: 0; }
+.chat-header-title { font-weight: 700; font-size: 1.1rem; }
+.chat-close {
+  background: none; border: none; color: #F8FAFA;
+  font-size: 22px; cursor: pointer; opacity: 0.7;
+  transition: opacity 0.2s; padding: 0; line-height: 1; flex-shrink: 0;
+}
+.chat-close:hover { opacity: 1; }
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 16px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.chat-msg {
+  max-width: 85%; padding: 10px 14px; border-radius: 12px;
+  font-size: 0.95rem; line-height: 1.5; word-wrap: break-word;
+}
+.chat-msg.user {
+  background: #236575; color: #F8FAFA;
+  align-self: flex-end; border-bottom-right-radius: 4px;
+}
+.chat-msg.bot {
+  background: #e8f0ed; color: #1A2B2E;
+  align-self: flex-start; border-bottom-left-radius: 4px;
+}
+.chat-input-area {
+  display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid #dde5e2;
+}
+.chat-input-area input {
+  flex: 1; border: 1px solid #d0d8d5; border-radius: 24px;
+  padding: 10px 16px; font-size: 0.95rem; font-family: inherit;
+  outline: none; transition: border-color 0.2s;
+}
+.chat-input-area input:focus { border-color: #236575; }
+.chat-input-area button {
+  background: #236575; color: #F8FAFA; border: none; border-radius: 50%;
+  width: 40px; height: 40px; font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s; flex-shrink: 0;
+}
+.chat-input-area button:hover { background: #1a4f5c; }
+.chat-input-area button:disabled { opacity: 0.5; cursor: not-allowed; }
+@media (max-width: 480px) {
+  .chat-btn { bottom: 16px; right: 16px; width: 90px; height: 90px; }
+  .chat-btn svg { width: 100%; height: 100%; display: block; }
+  .chat-widget { bottom: 120px; right: 8px; width: calc(100vw - 16px); height: 60vh; }
+  .chat-logo-wrap { width: 44px; height: 44px; }
+}
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -907,6 +1007,8 @@ setTimeout(function(){if(!sessionStorage.getItem('modalShown')){sessionStorage.s
 <script>
 try{emailjs.init('-S1e762arpbUov2ic');}catch(e){}
 function sendRequest(e){e.preventDefault();const b=document.getElementById('submitBtn'),s=document.getElementById('formStatus');b.disabled=true;b.textContent='Отправка...';try{emailjs.send('service_c2yal7e','template_q3t7rj8',{name:document.getElementById('name').value,phone:document.getElementById('phone').value,email:document.getElementById('email').value,description:document.getElementById('description').value}).then(()=>{s.textContent='Заявка отправлена! Мы свяжемся с вами в ближайшее время.';s.className='form-status';document.getElementById('requestForm').reset();setTimeout(closeModal,2000);}).catch(()=>{s.textContent='Ошибка отправки. Попробуйте позже или напишите на info@technadzorkazan.ru';s.className='form-status error';}).finally(()=>{b.disabled=false;b.textContent='Отправить';});}catch(e){s.textContent='Ошибка отправки. Напишите на info@technadzorkazan.ru';s.className='form-status error';b.disabled=false;b.textContent='Отправить';}
+
+
 
 
 <button class="chat-btn" id="chatBtn" aria-label="Чат"><svg viewBox="0 0 140 140"><circle cx="70" cy="70" r="66" fill="#1a4f5c"/><text x="70" y="33" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#F8FAFA">ЧАТ</text><g transform="translate(70,67)" fill="none" stroke="#F8FAFA" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M-9-2.5a2.5 2.5 0 0 0-2.5 2.5v9a4.5 4.5 0 0 0 9 0V-4.5a3.5 3.5 0 0 0-7 0v11.5a1.5 1.5 0 0 0 3 0V0"/></g><text x="70" y="96" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#F8FAFA">контакты</text><text x="70" y="111" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#F8FAFA">не требуются</text></svg></button>
