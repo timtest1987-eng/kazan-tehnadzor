@@ -1,5 +1,4 @@
 <style>
-/* Floating Chat Button */
 .chat-btn {
   position: fixed;
   bottom: 32px;
@@ -24,6 +23,50 @@
   filter: drop-shadow(0 8px 28px rgba(35, 101, 117, 0.6));
 }
 .chat-btn svg { width: 100%; height: 100%; display: block; }
+
+.chat-invite {
+  position: fixed;
+  bottom: 180px;
+  right: 24px;
+  z-index: 998;
+  display: none;
+  animation: slideUp 0.4s ease-out;
+}
+.chat-invite.show { display: block; }
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.chat-invite-inner {
+  background: #236575;
+  color: #F8FAFA;
+  padding: 14px 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(35, 101, 117, 0.35);
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s;
+  max-width: 240px;
+}
+.chat-invite-inner:hover { background: #1a4f5c; }
+.chat-invite-close {
+  background: none;
+  border: none;
+  color: #F8FAFA;
+  font-size: 18px;
+  cursor: pointer;
+  opacity: 0.6;
+  padding: 0;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+.chat-invite-close:hover { opacity: 1; }
+
 .chat-widget {
   position: fixed;
   bottom: 195px;
@@ -41,6 +84,7 @@
   overflow: hidden;
 }
 .chat-widget.open { display: flex; }
+
 .chat-header {
   background: #236575;
   color: #F8FAFA;
@@ -59,10 +103,54 @@
   transition: opacity 0.2s; padding: 0; line-height: 1; flex-shrink: 0;
 }
 .chat-close:hover { opacity: 1; }
+
+.chat-name-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+  text-align: center;
+  gap: 12px;
+}
+.chat-name-screen p {
+  color: #236575;
+  font-weight: 600;
+  font-size: 1rem;
+  margin: 0;
+}
+.chat-name-screen input {
+  border: 2px solid #d0d8d5;
+  border-radius: 24px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-family: inherit;
+  width: 100%;
+  max-width: 260px;
+  outline: none;
+  transition: border-color 0.2s;
+  text-align: center;
+}
+.chat-name-screen input:focus { border-color: #236575; }
+.chat-name-screen button {
+  background: #236575;
+  color: #F8FAFA;
+  border: none;
+  border-radius: 24px;
+  padding: 12px 36px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.chat-name-screen button:hover { background: #1a4f5c; }
+
 .chat-messages {
   flex: 1; overflow-y: auto; padding: 16px;
-  display: flex; flex-direction: column; gap: 8px;
+  display: none; flex-direction: column; gap: 8px;
 }
+.chat-messages.show { display: flex; }
 .chat-msg {
   max-width: 85%; padding: 10px 14px; border-radius: 12px;
   font-size: 0.95rem; line-height: 1.5; word-wrap: break-word;
@@ -75,9 +163,14 @@
   background: #e8f0ed; color: #1A2B2E;
   align-self: flex-start; border-bottom-left-radius: 4px;
 }
-.chat-input-area {
-  display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid #dde5e2;
+.chat-msg .chat-msg-name {
+  font-weight: 700; margin-bottom: 4px;
 }
+
+.chat-input-area {
+  display: none; gap: 8px; padding: 12px 16px; border-top: 1px solid #dde5e2;
+}
+.chat-input-area.show { display: flex; }
 .chat-input-area input {
   flex: 1; border: 1px solid #d0d8d5; border-radius: 24px;
   padding: 10px 16px; font-size: 0.95rem; font-family: inherit;
@@ -92,62 +185,145 @@
 }
 .chat-input-area button:hover { background: #1a4f5c; }
 .chat-input-area button:disabled { opacity: 0.5; cursor: not-allowed; }
+
 @media (max-width: 480px) {
   .chat-btn { bottom: 16px; right: 16px; width: 90px; height: 90px; }
   .chat-btn svg { width: 100%; height: 100%; display: block; }
   .chat-widget { bottom: 120px; right: 8px; width: calc(100vw - 16px); height: 60vh; }
   .chat-logo-wrap { width: 44px; height: 44px; }
+  .chat-invite { bottom: 110px; right: 8px; }
+  .chat-invite-inner { max-width: 200px; font-size: 0.85rem; padding: 10px 16px; }
 }
 </style>
-<button class="chat-btn" id="chatBtn" aria-label="Чат"><svg viewBox="0 0 140 140"><circle cx="70" cy="70" r="66" fill="#1a4f5c"/><text x="70" y="33" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#F8FAFA">ЧАТ</text><g transform="translate(70,67)" fill="none" stroke="#F8FAFA" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M-9-2.5a2.5 2.5 0 0 0-2.5 2.5v9a4.5 4.5 0 0 0 9 0V-4.5a3.5 3.5 0 0 0-7 0v11.5a1.5 1.5 0 0 0 3 0V0"/></g><text x="70" y="96" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#F8FAFA">контакты</text><text x="70" y="111" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#F8FAFA">не требуются</text></svg></button>
+
+<button class="chat-btn" id="chatBtn" aria-label="Чат">
+<svg viewBox="0 0 140 140">
+  <circle cx="70" cy="70" r="66" fill="#1a4f5c"/>
+  <text x="70" y="30" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" font-weight="700" fill="#F8FAFA">ЧАТ</text>
+  <g transform="translate(70,68)" fill="none" stroke="#F8FAFA" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M-10-3a3 3 0 0 0-3 3v11a5.5 5.5 0 0 0 11 0V-5.5a4.5 4.5 0 0 0-9 0v14a2 2 0 0 0 4 0V0"/>
+  </g>
+  <text x="70" y="112" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#F8FAFA">ЖДЁТ</text>
+</svg>
+</button>
+
+<div class="chat-invite" id="chatInvite">
+  <div class="chat-invite-inner" id="chatInviteInner">
+    <span>💬 Оставить заявку</span>
+    <button class="chat-invite-close" id="chatInviteClose">&times;</button>
+  </div>
+</div>
 
 <div class="chat-widget" id="chatWidget">
   <div class="chat-header">
-    <div class="chat-logo-wrap"><svg viewBox="0 0 120 120" class="chat-logo-svg"><circle cx="60" cy="60" r="50" fill="#1a4f5c"/><circle cx="60" cy="60" r="46" fill="none" stroke="#F8FAFA" stroke-width="1.2"/><g transform="translate(60,60)" fill="none" stroke="#F8FAFA" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M-12-4a4 4 0 0 0-4 4v13a6.5 6.5 0 0 0 13 0V-7a5.5 5.5 0 0 0-11 0v17a3.5 3.5 0 0 0 7 0V0"/></g></svg></div>
+    <div class="chat-logo-wrap">
+      <svg viewBox="0 0 120 120" class="chat-logo-svg">
+        <circle cx="60" cy="60" r="50" fill="#1a4f5c"/>
+        <circle cx="60" cy="60" r="46" fill="none" stroke="#F8FAFA" stroke-width="1.2"/>
+        <g transform="translate(60,60)" fill="none" stroke="#F8FAFA" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M-12-4a4 4 0 0 0-4 4v13a6.5 6.5 0 0 0 13 0V-7a5.5 5.5 0 0 0-11 0v17a3.5 3.5 0 0 0 7 0V0"/>
+        </g>
+      </svg>
+    </div>
     <div class="chat-header-info">
       <span class="chat-header-title">Скрепыч 📎</span>
     </div>
     <button class="chat-close" id="chatClose">&times;</button>
   </div>
+
+  <div class="chat-name-screen" id="chatNameScreen">
+    <p>Как к вам обращаться?</p>
+    <input type="text" id="chatNameInput" placeholder="Ваше имя" maxlength="40" autocomplete="off">
+    <button id="chatNameBtn">Начать чат</button>
+  </div>
+
   <div class="chat-messages" id="chatMessages">
     <div class="chat-msg bot">
-      <div style="font-weight:700;margin-bottom:4px;">Скрепыч 📎</div>
-      Привет! Сейчас единственный способ связаться — этот чат.<br><br>
-      Напишите ваш вопрос — я отвечу в рабочие часы.
+      <div class="chat-msg-name">Скрепыч 📎</div>
+      Здравствуйте! Я не ИИ, а живой! Напишите ваш вопрос — я отвечу
     </div>
   </div>
-  <div class="chat-input-area">
+
+  <div class="chat-input-area" id="chatInputArea">
     <input type="text" id="chatInput" placeholder="Ваше сообщение..." autocomplete="off">
     <button id="chatSend">➤</button>
   </div>
 </div>
+
 <script>
 (function() {
   var wrk = 'https://telegram-chat.timtest1987.workers.dev';
   var vid = localStorage.getItem('ch_vid') || crypto.randomUUID();
   localStorage.setItem('ch_vid', vid);
+  var chatName = localStorage.getItem('ch_name') || '';
+
   var b = document.getElementById('chatBtn');
   var w = document.getElementById('chatWidget');
   var c = document.getElementById('chatClose');
   var i = document.getElementById('chatInput');
   var s = document.getElementById('chatSend');
   var m = document.getElementById('chatMessages');
+  var ia = document.getElementById('chatInputArea');
+  var ns = document.getElementById('chatNameScreen');
+  var ni = document.getElementById('chatNameInput');
+  var nb = document.getElementById('chatNameBtn');
+
+  var inv = document.getElementById('chatInvite');
+  var invInner = document.getElementById('chatInviteInner');
+  var invClose = document.getElementById('chatInviteClose');
+
   var lt = parseInt(localStorage.getItem('ch_ts') || '0');
   var sending = 0;
+  var pollTimer = null;
+  var inviteTimer = null;
+  var inviteShown = false;
+
   if (!b || !w) return;
-  function tg() {
-    w.classList.toggle('open');
-    if (w.classList.contains('open')) { i.focus(); poll(); m.scrollTop = m.scrollHeight; }
+
+  function showChat() {
+    w.classList.add('open');
+    hideInvite();
+    if (chatName) {
+      ns.style.display = 'none';
+      m.classList.add('show');
+      ia.classList.add('show');
+      setTimeout(function() { i.focus(); }, 100);
+      startPoll();
+    } else {
+      ns.style.display = 'flex';
+      setTimeout(function() { ni.focus(); }, 100);
+    }
+    m.scrollTop = m.scrollHeight;
   }
-  b.addEventListener('click', tg);
-  c.addEventListener('click', tg);
+
+  function hideChat() {
+    w.classList.remove('open');
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  }
+
+  function toggleChat() {
+    if (w.classList.contains('open')) { hideChat(); }
+    else { showChat(); }
+  }
+
+  function hideInvite() {
+    inv.classList.remove('show');
+    if (inviteTimer) { clearTimeout(inviteTimer); inviteTimer = null; }
+  }
+
+  function showInvite() {
+    if (!w.classList.contains('open') && !inviteShown) {
+      inv.classList.add('show');
+      inviteShown = true;
+    }
+  }
+
   function addMsg(nm, txt, cls) {
     var d = document.createElement('div');
     d.className = 'chat-msg ' + cls;
     if (nm) {
       var l = document.createElement('div');
-      l.style.fontWeight = '700';
-      l.style.marginBottom = '4px';
+      l.className = 'chat-msg-name';
       l.textContent = nm;
       d.appendChild(l);
     }
@@ -157,6 +333,13 @@
     m.appendChild(d);
     m.scrollTop = m.scrollHeight;
   }
+
+  function startPoll() {
+    if (pollTimer) return;
+    pollTimer = setInterval(poll, 3000);
+    setTimeout(poll, 1000);
+  }
+
   function poll() {
     fetch(wrk + '/api/messages?visitorId=' + encodeURIComponent(vid))
       .then(function(r) { return r.json(); })
@@ -174,6 +357,7 @@
       })
       .catch(function() {});
   }
+
   function send() {
     if (sending || !i.value.trim()) return;
     var t = i.value.trim();
@@ -184,19 +368,19 @@
     fetch(wrk + '/api/send', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ visitorId: vid, message: t })
+      body: JSON.stringify({ visitorId: vid, message: t, name: chatName })
     })
     .then(function(r) { return r.json(); })
     .then(function(d) {
       if (d && d.ok) {
-        addMsg(null, '\u2705 \u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E!', 'bot');
+        addMsg(null, '✅ Отправлено!', 'bot');
         poll();
       } else {
-        addMsg(null, '\u274C \u041E\u0448\u0438\u0431\u043A\u0430. \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u043F\u043E\u0437\u0436\u0435.', 'bot');
+        addMsg(null, '❌ Ошибка. Попробуйте позже.', 'bot');
       }
     })
     .catch(function() {
-      addMsg(null, '\u274C \u041E\u0448\u0438\u0431\u043A\u0430 \u0441\u0435\u0440\u0432\u0435\u0440\u0430. \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u043F\u043E\u0437\u0436\u0435.', 'bot');
+      addMsg(null, '❌ Ошибка сервера. Попробуйте позже.', 'bot');
     })
     .then(function() {
       sending = 0;
@@ -204,9 +388,33 @@
       i.focus();
     });
   }
+
+  function setName() {
+    var n = ni.value.trim();
+    if (!n) { ni.focus(); return; }
+    chatName = n;
+    localStorage.setItem('ch_name', n);
+    ns.style.display = 'none';
+    m.classList.add('show');
+    ia.classList.add('show');
+    startPoll();
+    i.focus();
+  }
+
+  b.addEventListener('click', toggleChat);
+  c.addEventListener('click', hideChat);
+  invInner.addEventListener('click', function(e) {
+    if (e.target.tagName !== 'BUTTON') showChat();
+  });
+  invClose.addEventListener('click', function(e) {
+    e.stopPropagation();
+    hideInvite();
+  });
   s.addEventListener('click', send);
   i.addEventListener('keydown', function(e) { if (e.key === 'Enter') send(); });
-  setInterval(poll, 3000);
-  setTimeout(poll, 1000);
+  ni.addEventListener('keydown', function(e) { if (e.key === 'Enter') setName(); });
+  nb.addEventListener('click', setName);
+
+  inviteTimer = setTimeout(showInvite, 15000);
 })();
 </script>
