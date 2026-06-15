@@ -467,7 +467,7 @@ try{emailjs.init('-S1e762arpbUov2ic');}catch(e){}
       noReplyTimer = setTimeout(function() {
         addMsg(null, '⏳ Если не получили ответ за 5 минут — напишите в <a href="https://max.ru/u/f9LHodD0cOK3m6XT34Ff8gnfgXcbfCGvttJNKUN3tTNgbq5SEdkC0vqnHzw" target="_blank" style="color:#F8FAFA;text-decoration:underline">Max</a>', 'bot');
         noReplyTimer = null;
-      }, 300000);
+      }, 5000);
     };
     xhr.onerror = function() {
       addMsg(null, '✅ Отправлено! (ожидайте ответ)', 'bot');
@@ -481,7 +481,7 @@ try{emailjs.init('-S1e762arpbUov2ic');}catch(e){}
       noReplyTimer = setTimeout(function() {
         addMsg(null, '⏳ Если не получили ответ за 5 минут — напишите в <a href="https://max.ru/u/f9LHodD0cOK3m6XT34Ff8gnfgXcbfCGvttJNKUN3tTNgbq5SEdkC0vqnHzw" target="_blank" style="color:#F8FAFA;text-decoration:underline">Max</a>', 'bot');
         noReplyTimer = null;
-      }, 300000);
+      }, 5000);
     };
     xhr.send(vkBody);
   }
