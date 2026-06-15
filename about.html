@@ -817,7 +817,6 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
   var wrk = 'https://telegram-chat.timtest1987.workers.dev';
   var vkToken = 'vk1.a.Ni14RlIFnaKJF1URa4Bh4lDt02m_4-ArdzSZjNZnJaE30hqMhq0jVHQBha0sjpB5A1fhXAccTcvWSY83ZkEMlc5bllDYdHQgaxiE_Ima_8cAnwqXJOlxKUmt6mR0_MW28hK0vZtqc0IwXXcysvt5IiZGSWSHpBlrCAv5O5uXQe4NyTS_NdntLZ-W5t92nvWFqwpB7SakSgLAniMnR1jHaA';
   var vid = localStorage.getItem('ch_vid') || crypto.randomUUID();
-  var lastMsgCount = 0;
   localStorage.setItem('ch_vid', vid);
   var chatName = localStorage.getItem('ch_name') || '';
 
@@ -836,7 +835,7 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
   var invInner = document.getElementById('chatInviteInner');
   var invClose = document.getElementById('chatInviteClose');
 
-  var lt = parseInt(localStorage.getItem('ch_ts') || '0');
+  var lastTs = parseInt(localStorage.getItem('ch_lastTs') || '0');
   var sending = 0;
   var pollTimer = null;
   var pollPaused = false;
@@ -920,20 +919,16 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
 
   function poll() {
     if (pollPaused) return;
-    fetch('/messages.json?' + Date.now())
+    fetch(wrk + '/api/messages?visitorId=' + vid)
       .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
       .then(function(d) {
         if (!d || !d.messages) return;
-        if (!vid) return;
-        var visitorMessages = d.messages[vid] || [];
-        if (!lastMsgCount) lastMsgCount = 0;
-        if (visitorMessages.length <= lastMsgCount) return;
-        var newMsgs = visitorMessages.slice(lastMsgCount);
-        lastMsgCount = visitorMessages.length;
-        for (var i = 0; i < newMsgs.length; i++) {
-          var g = newMsgs[i];
-          if (g.role === 'operator') {
-            addMsg(g.name || 'Скрепыч', g.message, 'bot');
+        var msgs = d.messages;
+        for (var i = 0; i < msgs.length; i++) {
+          if (msgs[i].role === 'operator' && msgs[i].ts > lastTs) {
+            addMsg(msgs[i].name || 'Скрепыч', msgs[i].message, 'bot');
+            if (msgs[i].ts > lastTs) lastTs = msgs[i].ts;
+            try { localStorage.setItem('ch_lastTs', String(lastTs)); } catch(e) {}
             if (noReplyTimer) { clearTimeout(noReplyTimer); noReplyTimer = null; }
           }
         }
