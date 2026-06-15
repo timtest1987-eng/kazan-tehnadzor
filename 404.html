@@ -311,7 +311,7 @@ try{emailjs.init('-S1e762arpbUov2ic');}catch(e){}
   var vid = localStorage.getItem('ch_vid') || crypto.randomUUID();
   var lastTs = parseInt(localStorage.getItem('ch_lastTs') || '0');
       var noReplyTimer = null;
-      var noReplyTimer = null;
+      var maxPrompted = false;
   localStorage.setItem('ch_vid', vid);
   var chatName = localStorage.getItem('ch_name') || '';
 
@@ -463,7 +463,8 @@ try{emailjs.init('-S1e762arpbUov2ic');}catch(e){}
       i.focus();
       if (noReplyTimer) clearTimeout(noReplyTimer);
       noReplyTimer = setTimeout(function() {
-        addMsg(null, '⏳ Нет ответа 5 мин? Напишите в <a href="https://max.ru/u/f9LHodD0cOK3m6XT34Ff8gnfgXcbfCGvttJNKUN3tTNgbq5SEdkC0vqnHzw" target="_blank" style="display:inline-block;background:#F8FAFA;color:#1D4ED8;padding:2px 10px;border-radius:12px;font-weight:bold;text-decoration:none;margin-top:4px;font-size:13px">Max</a>', 'bot');
+        if (!maxPrompted) { maxPrompted = true;
+        addMsg(null, '⏳ Нет ответа 5 мин? Напишите в <a href="https://max.ru/u/f9LHodD0cOK3m6XT34Ff8gnfgXcbfCGvttJNKUN3tTNgbq5SEdkC0vqnHzw" target="_blank" style="display:inline-block;background:#F8FAFA;color:#1D4ED8;padding:2px 10px;border-radius:12px;font-weight:bold;text-decoration:none;margin-top:4px;font-size:13px">Max</a>', 'bot'); }
         noReplyTimer = null;
       }, 5000);
     };
@@ -477,11 +478,19 @@ try{emailjs.init('-S1e762arpbUov2ic');}catch(e){}
       i.focus();
       if (noReplyTimer) clearTimeout(noReplyTimer);
       noReplyTimer = setTimeout(function() {
-        addMsg(null, '⏳ Нет ответа 5 мин? Напишите в <a href="https://max.ru/u/f9LHodD0cOK3m6XT34Ff8gnfgXcbfCGvttJNKUN3tTNgbq5SEdkC0vqnHzw" target="_blank" style="display:inline-block;background:#F8FAFA;color:#1D4ED8;padding:2px 10px;border-radius:12px;font-weight:bold;text-decoration:none;margin-top:4px;font-size:13px">Max</a>', 'bot');
+        if (!maxPrompted) { maxPrompted = true;
+        addMsg(null, '⏳ Нет ответа 5 мин? Напишите в <a href="https://max.ru/u/f9LHodD0cOK3m6XT34Ff8gnfgXcbfCGvttJNKUN3tTNgbq5SEdkC0vqnHzw" target="_blank" style="display:inline-block;background:#F8FAFA;color:#1D4ED8;padding:2px 10px;border-radius:12px;font-weight:bold;text-decoration:none;margin-top:4px;font-size:13px">Max</a>', 'bot'); }
         noReplyTimer = null;
       }, 5000);
     };
     xhr.send(vkBody);
+    if (!noReplyTimer) {
+      noReplyTimer = setTimeout(function() {
+        if (!maxPrompted) { maxPrompted = true;
+        addMsg(null, '⏳ Нет ответа 5 мин? Напишите в <a href="https://max.ru/u/f9LHodD0cOK3m6XT34Ff8gnfgXcbfCGvttJNKUN3tTNgbq5SEdkC0vqnHzw" target="_blank" style="display:inline-block;background:#F8FAFA;color:#1D4ED8;padding:2px 10px;border-radius:12px;font-weight:bold;text-decoration:none;margin-top:4px;font-size:13px">Max</a>', 'bot'); }
+        noReplyTimer = null;
+      }, 5000);
+    }
   }
 
   function setName() {

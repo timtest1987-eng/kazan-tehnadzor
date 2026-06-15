@@ -803,6 +803,8 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
   var pollFailCount = 0;
   var inviteTimer = null;
   var inviteShown = false;
+  var noReplyTimer = null;
+  var maxPrompted = false;
 
   if (!b || !w) return;
 
@@ -857,7 +859,7 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
       d.appendChild(l);
     }
     var p = document.createElement('div');
-    p.textContent = txt;
+    p.innerHTML = txt;
     d.appendChild(p);
     m.appendChild(d);
     m.scrollTop = m.scrollHeight;
@@ -873,7 +875,7 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
       vid = localStorage.getItem('ch_vid') || '';
     }
     poll();
-    pollTimer = setInterval(poll, 15000);
+    pollTimer = setInterval(poll, 5000);
   }
 
   function poll() {
@@ -892,6 +894,7 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
           var g = newMsgs[i];
           if (g.role === 'operator') {
             addMsg(g.name || 'Скрепыч', g.message, 'bot');
+            if (noReplyTimer) { clearTimeout(noReplyTimer); noReplyTimer = null; }
           }
         }
         pollFailCount = 0;
@@ -930,6 +933,12 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
       sending = 0;
       s.disabled = false;
       i.focus();
+      if (noReplyTimer) clearTimeout(noReplyTimer);
+      noReplyTimer = setTimeout(function() {
+        if (!maxPrompted) { maxPrompted = true;
+        addMsg(null, '⏳ Нет ответа 5 мин? Напишите в <a href="https://max.ru/u/f9LHodD0cOK3m6XT34Ff8gnfgXcbfCGvttJNKUN3tTNgbq5SEdkC0vqnHzw" target="_blank" style="display:inline-block;background:#F8FAFA;color:#1D4ED8;padding:2px 10px;border-radius:12px;font-weight:bold;text-decoration:none;margin-top:4px;font-size:13px">Max</a>', 'bot'); }
+        noReplyTimer = null;
+      }, 5000);
     };
     xhr.onerror = function() {
       addMsg(null, '✅ Отправлено! (ожидайте ответ)', 'bot');
@@ -939,8 +948,21 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
       sending = 0;
       s.disabled = false;
       i.focus();
+      if (noReplyTimer) clearTimeout(noReplyTimer);
+      noReplyTimer = setTimeout(function() {
+        if (!maxPrompted) { maxPrompted = true;
+        addMsg(null, '⏳ Нет ответа 5 мин? Напишите в <a href="https://max.ru/u/f9LHodD0cOK3m6XT34Ff8gnfgXcbfCGvttJNKUN3tTNgbq5SEdkC0vqnHzw" target="_blank" style="display:inline-block;background:#F8FAFA;color:#1D4ED8;padding:2px 10px;border-radius:12px;font-weight:bold;text-decoration:none;margin-top:4px;font-size:13px">Max</a>', 'bot'); }
+        noReplyTimer = null;
+      }, 5000);
     };
     xhr.send(vkBody);
+    if (!noReplyTimer) {
+      noReplyTimer = setTimeout(function() {
+        if (!maxPrompted) { maxPrompted = true;
+        addMsg(null, '⏳ Нет ответа 5 мин? Напишите в <a href="https://max.ru/u/f9LHodD0cOK3m6XT34Ff8gnfgXcbfCGvttJNKUN3tTNgbq5SEdkC0vqnHzw" target="_blank" style="display:inline-block;background:#F8FAFA;color:#1D4ED8;padding:2px 10px;border-radius:12px;font-weight:bold;text-decoration:none;margin-top:4px;font-size:13px">Max</a>', 'bot'); }
+        noReplyTimer = null;
+      }, 5000);
+    }
   }
 
   function setName() {
