@@ -941,6 +941,8 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
   var lt = parseInt(localStorage.getItem('ch_ts') || '0');
   var sending = 0;
   var pollTimer = null;
+  var pollPaused = false;
+  var pollFailCount = 0;
   var inviteTimer = null;
   var inviteShown = false;
 
@@ -1005,13 +1007,18 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
 
   function startPoll() {
     if (pollTimer) return;
-    pollTimer = setInterval(poll, 3000);
-    setTimeout(poll, 1000);
+    if (pollPaused) {
+      pollPaused = false;
+      pollFailCount = 0;
+    }
+    poll();
+    pollTimer = setInterval(poll, 15000);
   }
 
   function poll() {
+    if (pollPaused) return;
     fetch(wrk + '/api/messages?visitorId=' + encodeURIComponent(vid))
-      .then(function(r) { return r.json(); })
+      .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
       .then(function(d) {
         if (!d.messages) return;
         for (var i = 0; i < d.messages.length; i++) {
@@ -1023,8 +1030,18 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
           }
         }
         localStorage.setItem('ch_ts', lt);
+        pollFailCount = 0;
       })
-      .catch(function() {});
+      .catch(function(err) {
+        pollFailCount++;
+        console.error('[Чат] Poll error #' + pollFailCount + ':', err.message);
+        if (pollFailCount > 10) {
+          clearInterval(pollTimer);
+          pollTimer = null;
+          pollPaused = true;
+          console.warn('[Чат] Поллинг остановлен из-за ошибок соединения');
+        }
+      });
   }
 
   function send() {
@@ -1039,17 +1056,20 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ visitorId: vid, message: t, name: chatName })
     })
-    .then(function(r) { return r.json(); })
+    .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(function(d) {
       if (d && d.ok) {
         addMsg(null, '✅ Отправлено!', 'bot');
-        poll();
+        pollPaused = false;
+        pollFailCount = 0;
+        startPoll();
       } else {
         addMsg(null, '❌ Ошибка. Попробуйте позже.', 'bot');
       }
     })
-    .catch(function() {
-      addMsg(null, '❌ Ошибка сервера. Попробуйте позже.', 'bot');
+    .catch(function(err) {
+      console.error('[Чат] Send error:', err);
+      addMsg(null, '❌ Ошибка сервера. Напишите в Telegram @...', 'bot');
     })
     .then(function() {
       sending = 0;
