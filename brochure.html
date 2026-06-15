@@ -836,7 +836,7 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
 (function() {
   var wrk = 'https://telegram-chat.timtest1987.workers.dev';
   var vkToken = 'vk1.a.Ni14RlIFnaKJF1URa4Bh4lDt02m_4-ArdzSZjNZnJaE30hqMhq0jVHQBha0sjpB5A1fhXAccTcvWSY83ZkEMlc5bllDYdHQgaxiE_Ima_8cAnwqXJOlxKUmt6mR0_MW28hK0vZtqc0IwXXcysvt5IiZGSWSHpBlrCAv5O5uXQe4NyTS_NdntLZ-W5t92nvWFqwpB7SakSgLAniMnR1jHaA';
-  var vid = localStorage.getItem('ch_vid') || crypto.randomUUID();
+  var vid = localStorage.getItem('ch_vid') || (crypto.randomUUID ? crypto.randomUUID() : Date.now() + '-' + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2));
   localStorage.setItem('ch_vid', vid);
   var chatName = localStorage.getItem('ch_name') || '';
 
@@ -937,32 +937,35 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
     pollTimer = setInterval(poll, 5000);
   }
 
+  function processMsgs(msgs) {
+    if (!msgs) return;
+    for (var i = 0; i < msgs.length; i++) {
+      var m = msgs[i];
+      if (m.role === 'operator' && m.ts > lastTs) {
+        addMsg(m.name || 'Скрепыч', m.message, 'bot');
+        if (m.ts > lastTs) lastTs = m.ts;
+        try { localStorage.setItem('ch_lastTs', String(lastTs)); } catch(e) {}
+        if (noReplyTimer) { clearTimeout(noReplyTimer); noReplyTimer = null; }
+      }
+    }
+  }
+
   function poll() {
     if (pollPaused) return;
-    fetch(wrk + '/api/messages?visitorId=' + vid)
-      .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-      .then(function(d) {
-        if (!d || !d.messages) return;
-        var msgs = d.messages;
-        for (var i = 0; i < msgs.length; i++) {
-          if (msgs[i].role === 'operator' && msgs[i].ts > lastTs) {
-            addMsg(msgs[i].name || 'Скрепыч', msgs[i].message, 'bot');
-            if (msgs[i].ts > lastTs) lastTs = msgs[i].ts;
-            try { localStorage.setItem('ch_lastTs', String(lastTs)); } catch(e) {}
-            if (noReplyTimer) { clearTimeout(noReplyTimer); noReplyTimer = null; }
-          }
-        }
-        pollFailCount = 0;
-      })
-      .catch(function(err) {
-        pollFailCount++;
-        console.error('[Чат] Poll error #' + pollFailCount + ':', err.message);
-        if (pollFailCount > 20) {
-          clearInterval(pollTimer);
-          pollTimer = null;
-          pollPaused = true;
-        }
-      });
+    var p = 2, any = false;
+    function c() { p--; if (p) return; if (any) { pollFailCount = 0; } else { pollFailCount++; if (pollFailCount > 20) { clearInterval(pollTimer); pollTimer = null; pollPaused = true; } } }
+    var x1 = new XMLHttpRequest();
+    x1.open('GET', wrk + '/api/messages?visitorId=' + vid);
+    x1.timeout = 10000; x1.ontimeout = c;
+    x1.onload = function() { if (x1.status === 200) { try { var d = JSON.parse(x1.responseText); if (d && d.messages) { any = true; processMsgs(d.messages); } } catch(e) {} } c(); };
+    x1.onerror = c;
+    x1.send();
+    var x2 = new XMLHttpRequest();
+    x2.open('GET', '/messages.json?' + Date.now());
+    x2.timeout = 10000; x2.ontimeout = c;
+    x2.onload = function() { if (x2.status === 200) { try { var d = JSON.parse(x2.responseText); if (d && d.messages) { any = true; var a = d.messages[vid] || []; if (a.length) { processMsgs(a); } } } catch(e) {} } c(); };
+    x2.onerror = c;
+    x2.send();
   }
 
   function send() {
