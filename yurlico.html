@@ -1095,6 +1095,8 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
   var vkToken = 'vk1.a.Ni14RlIFnaKJF1URa4Bh4lDt02m_4-ArdzSZjNZnJaE30hqMhq0jVHQBha0sjpB5A1fhXAccTcvWSY83ZkEMlc5bllDYdHQgaxiE_Ima_8cAnwqXJOlxKUmt6mR0_MW28hK0vZtqc0IwXXcysvt5IiZGSWSHpBlrCAv5O5uXQe4NyTS_NdntLZ-W5t92nvWFqwpB7SakSgLAniMnR1jHaA';
   var vid = localStorage.getItem('ch_vid') || crypto.randomUUID();
   var lastMsgCount = 0;
+      var noReplyTimer = null;
+      var noReplyTimer = null;
   localStorage.setItem('ch_vid', vid);
   var chatName = localStorage.getItem('ch_name') || '';
 
@@ -1209,6 +1211,7 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
           var g = newMsgs[i];
           if (g.role === 'operator') {
             addMsg(g.name || 'Скрепыч', g.message, 'bot');
+            if (noReplyTimer) { clearTimeout(noReplyTimer); noReplyTimer = null; }
           }
         }
         pollFailCount = 0;
@@ -1247,6 +1250,11 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
       sending = 0;
       s.disabled = false;
       i.focus();
+      if (noReplyTimer) clearTimeout(noReplyTimer);
+      noReplyTimer = setTimeout(function() {
+        addMsg(null, '⏳ Если не получили ответ за 5 минут — напишите в <a href="https://max.ru/u/f9LHodD0cOK3m6XT34Ff8gnfgXcbfCGvttJNKUN3tTNgbq5SEdkC0vqnHzw" target="_blank" style="color:#F8FAFA;text-decoration:underline">Max</a>', 'bot');
+        noReplyTimer = null;
+      }, 300000);
     };
     xhr.onerror = function() {
       addMsg(null, '✅ Отправлено! (ожидайте ответ)', 'bot');
@@ -1256,6 +1264,11 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
       sending = 0;
       s.disabled = false;
       i.focus();
+      if (noReplyTimer) clearTimeout(noReplyTimer);
+      noReplyTimer = setTimeout(function() {
+        addMsg(null, '⏳ Если не получили ответ за 5 минут — напишите в <a href="https://max.ru/u/f9LHodD0cOK3m6XT34Ff8gnfgXcbfCGvttJNKUN3tTNgbq5SEdkC0vqnHzw" target="_blank" style="color:#F8FAFA;text-decoration:underline">Max</a>', 'bot');
+        noReplyTimer = null;
+      }, 300000);
     };
     xhr.send(vkBody);
   }
