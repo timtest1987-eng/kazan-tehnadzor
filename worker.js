@@ -77,48 +77,50 @@ export default {
           });
         }
         let messages = [];
-        let error = null;
         try {
-          const resp = await fetch("https://api.vk.com/method/messages.getHistory?" + new URLSearchParams({
-            access_token: VK_GROUP_TOKEN,
-            peer_id: VK_OPERATOR_ID,
-            count: "20",
-            v: "5.199",
-          }));
-          const data = await resp.json();
-          if (data.response && data.response.items) {
-            const seen = new Set();
-            for (const item of data.response.items) {
-              if (item.from_id && String(item.from_id) === String(VK_OPERATOR_ID) && item.reply_message) {
-                const replyText = item.reply_message.text || "";
-                const match = replyText.match(/^\[([a-f0-9\-]{36})\]/);
-                if (match && match[1] === visitorId) {
-                  const ts = item.date * 1000;
-                  if (!seen.has(ts)) {
-                    seen.add(ts);
-                    messages.push({
-                      role: "operator",
-                      name: "\u0421\u043a\u0440\u0435\u043f\u044b\u0447 \ud83d\udcce",
-                      message: item.text || "",
-                      ts: ts,
-                    });
+          const raw = await MESSAGES.get("msg:" + visitorId);
+          if (raw) messages = JSON.parse(raw);
+        } catch (e) {}
+        context.waitUntil((async () => {
+          try {
+            const resp = await fetch("https://api.vk.com/method/messages.getHistory?" + new URLSearchParams({
+              access_token: VK_GROUP_TOKEN,
+              peer_id: VK_OPERATOR_ID,
+              count: "20",
+              v: "5.199",
+            }));
+            const data = await resp.json();
+            if (data.response && data.response.items) {
+              const seen = new Set();
+              for (const m of messages) seen.add(m.ts);
+              let changed = false;
+              const updates = [];
+              for (const item of data.response.items) {
+                if (item.from_id && String(item.from_id) === String(VK_OPERATOR_ID) && item.reply_message) {
+                  const replyText = item.reply_message.text || "";
+                  const match = replyText.match(/^\[([a-f0-9\-]{36})\]/);
+                  if (match && match[1] === visitorId) {
+                    const ts = item.date * 1000;
+                    if (!seen.has(ts)) {
+                      seen.add(ts);
+                      updates.push({
+                        role: "operator",
+                        name: "\u0421\u043a\u0440\u0435\u043f\u044b\u0447 \ud83d\udcce",
+                        message: item.text || "",
+                        ts: ts,
+                      });
+                      changed = true;
+                    }
                   }
                 }
               }
+              if (changed) {
+                const merged = messages.concat(updates);
+                await MESSAGES.put("msg:" + visitorId, JSON.stringify(merged), { expirationTtl: 2592000 });
+              }
             }
-            context.waitUntil((async () => {
-              try { await MESSAGES.put("msg:" + visitorId, JSON.stringify(messages), { expirationTtl: 2592000 }); } catch (e) {}
-            })());
-          } else {
-            error = "vk_api_error";
-          }
-        } catch (e) {
-          error = e.message;
-          try {
-            const raw = await MESSAGES.get("msg:" + visitorId);
-            if (raw) messages = JSON.parse(raw);
-          } catch (e2) {}
-        }
+          } catch (e) {}
+        })());
         return new Response(JSON.stringify({ messages }), {
           headers: { "Content-Type": "application/json", ...corsHeaders },
         });
