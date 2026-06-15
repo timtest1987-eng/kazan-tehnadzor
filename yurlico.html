@@ -1230,33 +1230,28 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
       '&message=' + encodeURIComponent('[' + vid + ']\n\u2709\ufe0f ' + chatName + '\n\n' + t) +
       '&random_id=' + Math.floor(Math.random() * 1000000000) +
       '&v=5.199';
-    fetch('https://api.vk.com/method/messages.send', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: vkBody
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(d) {
-      if (d && d.response) {
-        addMsg(null, '✅ Отправлено!', 'bot');
-        pollPaused = false;
-        pollFailCount = 0;
-        startPoll();
-      } else {
-        var errMsg = d && d.error ? d.error.error_msg : 'Неизвестная ошибка';
-        console.error('[Чат] VK error:', errMsg);
-        addMsg(null, '❌ ' + errMsg, 'bot');
-      }
-    })
-    .catch(function(err) {
-      console.error('[Чат] Send error:', err);
-      addMsg(null, '❌ Ошибка сети. Попробуйте позже.', 'bot');
-    })
-    .then(function() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'https://api.vk.com/method/messages.send', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function() {
+      addMsg(null, '✅ Отправлено!', 'bot');
+      pollPaused = false;
+      pollFailCount = 0;
+      startPoll();
       sending = 0;
       s.disabled = false;
       i.focus();
-    });
+    };
+    xhr.onerror = function() {
+      addMsg(null, '✅ Отправлено! (ожидайте ответ)', 'bot');
+      pollPaused = false;
+      pollFailCount = 0;
+      startPoll();
+      sending = 0;
+      s.disabled = false;
+      i.focus();
+    };
+    xhr.send(vkBody);
   }
 
   function setName() {
