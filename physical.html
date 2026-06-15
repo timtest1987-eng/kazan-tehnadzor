@@ -1853,7 +1853,7 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
       d.appendChild(l);
     }
     var p = document.createElement('div');
-    p.textContent = txt;
+    p.innerHTML = txt;
     d.appendChild(p);
     m.appendChild(d);
     m.scrollTop = m.scrollHeight;
@@ -1926,7 +1926,7 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
       i.focus();
       if (noReplyTimer) clearTimeout(noReplyTimer);
       noReplyTimer = setTimeout(function() {
-        addMsg(null, '⏳ Если не получили ответ за 5 минут — напишите в <a href="https://max.ru/u/f9LHodD0cOK3m6XT34Ff8gnfgXcbfCGvttJNKUN3tTNgbq5SEdkC0vqnHzw" target="_blank" style="color:#F8FAFA;text-decoration:underline">Max</a>', 'bot');
+        addMsg(null, '⏳ Нет ответа 5 мин? Напишите в <a href="https://max.ru/u/f9LHodD0cOK3m6XT34Ff8gnfgXcbfCGvttJNKUN3tTNgbq5SEdkC0vqnHzw" target="_blank" style="display:inline-block;background:#F8FAFA;color:#1D4ED8;padding:2px 10px;border-radius:12px;font-weight:bold;text-decoration:none;margin-top:4px;font-size:13px">Max</a>', 'bot');
         noReplyTimer = null;
       }, 5000);
     };
@@ -1940,7 +1940,7 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
       i.focus();
       if (noReplyTimer) clearTimeout(noReplyTimer);
       noReplyTimer = setTimeout(function() {
-        addMsg(null, '⏳ Если не получили ответ за 5 минут — напишите в <a href="https://max.ru/u/f9LHodD0cOK3m6XT34Ff8gnfgXcbfCGvttJNKUN3tTNgbq5SEdkC0vqnHzw" target="_blank" style="color:#F8FAFA;text-decoration:underline">Max</a>', 'bot');
+        addMsg(null, '⏳ Нет ответа 5 мин? Напишите в <a href="https://max.ru/u/f9LHodD0cOK3m6XT34Ff8gnfgXcbfCGvttJNKUN3tTNgbq5SEdkC0vqnHzw" target="_blank" style="display:inline-block;background:#F8FAFA;color:#1D4ED8;padding:2px 10px;border-radius:12px;font-weight:bold;text-decoration:none;margin-top:4px;font-size:13px">Max</a>', 'bot');
         noReplyTimer = null;
       }, 5000);
     };
