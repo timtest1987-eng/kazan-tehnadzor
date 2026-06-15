@@ -1145,7 +1145,7 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
     w.classList.remove('open');
     if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
     if (!inviteShown && !inviteTimer) {
-      inviteTimer = setTimeout(showInvite, 15000);
+      inviteTimer = setTimeout(showInvite, 5000);
     }
   }
 
@@ -1192,7 +1192,7 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
       vid = localStorage.getItem('ch_vid') || '';
     }
     poll();
-    pollTimer = setInterval(poll, 15000);
+    pollTimer = setInterval(poll, 5000);
   }
 
   function poll() {
