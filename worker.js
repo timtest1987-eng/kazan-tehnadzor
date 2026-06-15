@@ -81,6 +81,47 @@ export default {
           const raw = await MESSAGES.get("msg:" + visitorId);
           if (raw) messages = JSON.parse(raw);
         } catch (e) {}
+        try {
+          const lastCheckRaw = await MESSAGES.get("vkck:" + visitorId);
+          const lastCheck = lastCheckRaw ? parseInt(lastCheckRaw) : 0;
+          if (Date.now() - lastCheck > 6000) {
+            const resp = await fetch("https://api.vk.com/method/messages.getHistory?" + new URLSearchParams({
+              access_token: VK_GROUP_TOKEN,
+              peer_id: VK_OPERATOR_ID,
+              count: "10",
+              v: "5.199",
+            }));
+            const data = await resp.json();
+            if (data.response && data.response.items) {
+              let changed = false;
+              const existingMap = new Map();
+              for (const m of messages) existingMap.set(m.ts, true);
+              for (const item of data.response.items) {
+                if (item.from_id && String(item.from_id) === String(VK_OPERATOR_ID) && item.reply_message) {
+                  const replyText = item.reply_message.text || "";
+                  const match = replyText.match(/^\[([a-f0-9\-]{36})\]/);
+                  if (match && match[1] === visitorId) {
+                    const ts = item.date * 1000;
+                    if (!existingMap.has(ts)) {
+                      messages.push({
+                        role: "operator",
+                        name: "\u0421\u043a\u0440\u0435\u043f\u044b\u0447 \ud83d\udcce",
+                        message: item.text || "",
+                        ts: ts,
+                      });
+                      existingMap.set(ts, true);
+                      changed = true;
+                    }
+                  }
+                }
+              }
+              if (changed) {
+                await MESSAGES.put("msg:" + visitorId, JSON.stringify(messages), { expirationTtl: 2592000 });
+              }
+            }
+            await MESSAGES.put("vkck:" + visitorId, String(Date.now()), { expirationTtl: 86400 });
+          }
+        } catch (e) {}
         return new Response(JSON.stringify({ messages }), {
           headers: { "Content-Type": "application/json", ...corsHeaders },
         });
