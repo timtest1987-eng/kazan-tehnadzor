@@ -142,6 +142,13 @@ export default {
                       ts: Date.now(),
                     });
                     await MESSAGES.put("msg:" + visitorId, JSON.stringify(existing), { expirationTtl: 2592000 }).catch(() => {});
+                    let visitors = [];
+                    try {
+                      const raw = await MESSAGES.get("visitors:all");
+                      if (raw) visitors = JSON.parse(raw);
+                    } catch (e) {}
+                    if (!visitors.includes(visitorId)) visitors.push(visitorId);
+                    await MESSAGES.put("visitors:all", JSON.stringify(visitors), { expirationTtl: 2592000 }).catch(() => {});
                   } catch (e) {}
                 })());
               }
