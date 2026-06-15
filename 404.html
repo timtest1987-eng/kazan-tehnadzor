@@ -308,6 +308,7 @@ try{emailjs.init('-S1e762arpbUov2ic');}catch(e){}
 <script>
 (function() {
   var wrk = 'https://telegram-chat.timtest1987.workers.dev';
+  var vkToken = 'vk1.a.GGeS8c4HpN2Bzjq3fk5OW2XmcTr2Ca04yvPsfKDkOYPY61tIuEINLtVS_v9KdueaiUN0vQM3vKPOwe96A10TQTQeX3VaFcnTby9fqPPMUYzTn3DArHDAGue-wIzNerqImjdt0Bgj8CUvOGsJ6CG8d0q61SVNrsCeMRG1AWc_2n-qL8X-6G-Xmsd9eqZCT_Y8z17ZiB8f5Vx3RuO82SO-Vw';
   var vid = localStorage.getItem('ch_vid') || crypto.randomUUID();
   localStorage.setItem('ch_vid', vid);
   var chatName = localStorage.getItem('ch_name') || '';
@@ -440,25 +441,32 @@ try{emailjs.init('-S1e762arpbUov2ic');}catch(e){}
     s.disabled = true;
     addMsg(null, t, 'user');
     i.value = '';
-    fetch(wrk + '/api/send', {
+    var vkBody = 'access_token=' + encodeURIComponent(vkToken) +
+      '&user_id=' + encodeURIComponent('1020120') +
+      '&message=' + encodeURIComponent('[' + vid + ']\n\u2709\ufe0f ' + chatName + '\n\n' + t) +
+      '&random_id=' + Math.floor(Math.random() * 1000000000) +
+      '&v=5.199';
+    fetch('https://api.vk.com/method/messages.send', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ visitorId: vid, message: t, name: chatName })
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: vkBody
     })
-    .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function(r) { return r.json(); })
     .then(function(d) {
-      if (d && d.ok) {
+      if (d && d.response) {
         addMsg(null, '✅ Отправлено!', 'bot');
         pollPaused = false;
         pollFailCount = 0;
         startPoll();
       } else {
-        addMsg(null, '❌ Ошибка. Попробуйте позже.', 'bot');
+        var errMsg = d && d.error ? d.error.error_msg : 'Неизвестная ошибка';
+        console.error('[Чат] VK error:', errMsg);
+        addMsg(null, '❌ ' + errMsg, 'bot');
       }
     })
     .catch(function(err) {
       console.error('[Чат] Send error:', err);
-      addMsg(null, '❌ Ошибка сервера. Напишите в Telegram @...', 'bot');
+      addMsg(null, '❌ Ошибка сети. Попробуйте позже.', 'bot');
     })
     .then(function() {
       sending = 0;
