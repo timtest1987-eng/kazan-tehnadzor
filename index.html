@@ -1665,7 +1665,7 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
   var wrk = 'https://telegram-chat.timtest1987.workers.dev';
   var vkToken = 'vk1.a.Ni14RlIFnaKJF1URa4Bh4lDt02m_4-ArdzSZjNZnJaE30hqMhq0jVHQBha0sjpB5A1fhXAccTcvWSY83ZkEMlc5bllDYdHQgaxiE_Ima_8cAnwqXJOlxKUmt6mR0_MW28hK0vZtqc0IwXXcysvt5IiZGSWSHpBlrCAv5O5uXQe4NyTS_NdntLZ-W5t92nvWFqwpB7SakSgLAniMnR1jHaA';
   var vid = localStorage.getItem('ch_vid') || crypto.randomUUID();
-  var lastMsgCount = 0;
+  var lastTs = parseInt(localStorage.getItem('ch_lastTs') || '0');
       var noReplyTimer = null;
       var noReplyTimer = null;
   localStorage.setItem('ch_vid', vid);
@@ -1773,15 +1773,14 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
       .then(function(d) {
         if (!d || !d.messages) return;
         var msgs = d.messages;
-        if (!lastMsgCount) lastMsgCount = 0;
-        if (msgs.length <= lastMsgCount) return;
-        for (var i = lastMsgCount; i < msgs.length; i++) {
-          if (msgs[i].role === 'operator') {
+        for (var i = 0; i < msgs.length; i++) {
+          if (msgs[i].role === 'operator' && msgs[i].ts > lastTs) {
             addMsg(msgs[i].name || 'Скрепыч', msgs[i].message, 'bot');
+            if (msgs[i].ts > lastTs) lastTs = msgs[i].ts;
+            try { localStorage.setItem('ch_lastTs', String(lastTs)); } catch(e) {}
             if (noReplyTimer) { clearTimeout(noReplyTimer); noReplyTimer = null; }
           }
         }
-        lastMsgCount = msgs.length;
         pollFailCount = 0;
       })
       .catch(function(err) {

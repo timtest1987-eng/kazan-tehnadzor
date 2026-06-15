@@ -87,17 +87,22 @@ export default {
           }));
           const data = await resp.json();
           if (data.response && data.response.items) {
+            const seen = new Set();
             for (const item of data.response.items) {
               if (item.from_id && String(item.from_id) === String(VK_OPERATOR_ID) && item.reply_message) {
                 const replyText = item.reply_message.text || "";
                 const match = replyText.match(/^\[([a-f0-9\-]{36})\]/);
                 if (match && match[1] === visitorId) {
-                  messages.push({
-                    role: "operator",
-                    name: "\u0421\u043a\u0440\u0435\u043f\u044b\u0447 \ud83d\udcce",
-                    message: item.text || "",
-                    ts: item.date * 1000,
-                  });
+                  const ts = item.date * 1000;
+                  if (!seen.has(ts)) {
+                    seen.add(ts);
+                    messages.push({
+                      role: "operator",
+                      name: "\u0421\u043a\u0440\u0435\u043f\u044b\u0447 \ud83d\udcce",
+                      message: item.text || "",
+                      ts: ts,
+                    });
+                  }
                 }
               }
             }
