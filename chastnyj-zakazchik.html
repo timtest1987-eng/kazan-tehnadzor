@@ -1103,6 +1103,7 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
   var wrk = 'https://telegram-chat.timtest1987.workers.dev';
   var vkToken = 'vk1.a.CbOzZLsIUymCqS0jpNCekNN8_SfDt6sT7nON64kibsD9bZkOlal91k8RdIBBww_hMbaa-J5G0SU3k45vgCOOg75LB00JoXG3TT2MtQ4EA1LChIo59EOuuxK2mtWEFNBkaY8fZY11-Pf-GbOygrYV-TVaxJU-jL77-og4G6Uyf7UyFYWS0XU6Ibm99vHnbyyU337Uffb6-2VO7m0o4etkuA';
   var vid = localStorage.getItem('ch_vid') || crypto.randomUUID();
+  var lastMsgCount = 0;
   localStorage.setItem('ch_vid', vid);
   var chatName = localStorage.getItem('ch_name') || '';
 
@@ -1194,35 +1195,40 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
       pollPaused = false;
       pollFailCount = 0;
     }
+    if (!vid) {
+      vid = localStorage.getItem('ch_vid') || '';
+    }
     poll();
     pollTimer = setInterval(poll, 15000);
   }
 
   function poll() {
     if (pollPaused) return;
-    fetch(wrk + '/api/messages?visitorId=' + encodeURIComponent(vid))
+    fetch('/messages.json?' + Date.now())
       .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
       .then(function(d) {
-        if (!d.messages) return;
-        for (var i = 0; i < d.messages.length; i++) {
-          var g = d.messages[i];
-          if (g.ts <= lt) continue;
-          lt = g.ts;
+        if (!d || !d.messages) return;
+        if (!vid) return;
+        var visitorMessages = d.messages[vid] || [];
+        if (!lastMsgCount) lastMsgCount = 0;
+        if (visitorMessages.length <= lastMsgCount) return;
+        var newMsgs = visitorMessages.slice(lastMsgCount);
+        lastMsgCount = visitorMessages.length;
+        for (var i = 0; i < newMsgs.length; i++) {
+          var g = newMsgs[i];
           if (g.role === 'operator') {
-            addMsg(g.name || 'Скрепыч', '→ ' + g.message, 'bot');
+            addMsg(g.name || 'Скрепыч', g.message, 'bot');
           }
         }
-        localStorage.setItem('ch_ts', lt);
         pollFailCount = 0;
       })
       .catch(function(err) {
         pollFailCount++;
         console.error('[Чат] Poll error #' + pollFailCount + ':', err.message);
-        if (pollFailCount > 10) {
+        if (pollFailCount > 20) {
           clearInterval(pollTimer);
           pollTimer = null;
           pollPaused = true;
-          console.warn('[Чат] Поллинг остановлен из-за ошибок соединения');
         }
       });
   }

@@ -1,6 +1,6 @@
 export default {
   async fetch(request, env, context) {
-    const { VK_GROUP_TOKEN, VK_OPERATOR_ID, VK_CONFIRMATION_CODE, VK_SECRET_KEY, MESSAGES } = env;
+    const { VK_GROUP_TOKEN, VK_OPERATOR_ID, VK_CONFIRMATION_CODE, VK_SECRET_KEY, MESSAGES, ADMIN_KEY } = env;
     const url = new URL(request.url);
     const path = url.pathname;
     const method = request.method;
@@ -54,6 +54,16 @@ export default {
           }),
         }).catch(() => {}));
 
+        context.waitUntil((async () => {
+          try {
+            let visitors = [];
+            const raw = await MESSAGES.get("visitors:all");
+            if (raw) visitors = JSON.parse(raw);
+            if (!visitors.includes(visitorId)) visitors.push(visitorId);
+            await MESSAGES.put("visitors:all", JSON.stringify(visitors), { expirationTtl: 2592000 });
+          } catch (e) {}
+        })());
+
         return new Response(JSON.stringify({ ok: true }), {
           headers: { "Content-Type": "application/json", ...corsHeaders },
         });
@@ -72,6 +82,30 @@ export default {
           if (raw) messages = JSON.parse(raw);
         } catch (e) {}
         return new Response(JSON.stringify({ messages }), {
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
+      }
+
+      if (path === "/api/admin/sync" && method === "GET") {
+        const auth = request.headers.get("Authorization") || "";
+        if (!auth.startsWith("Bearer ") || auth.slice(7) !== ADMIN_KEY) {
+          return new Response(JSON.stringify({ ok: false, error: "unauthorized" }), {
+            status: 403, headers: { "Content-Type": "application/json", ...corsHeaders },
+          });
+        }
+        let visitors = [];
+        try {
+          const raw = await MESSAGES.get("visitors:all");
+          if (raw) visitors = JSON.parse(raw);
+        } catch (e) {}
+        const result = {};
+        for (const vid of visitors) {
+          try {
+            const raw = await MESSAGES.get("msg:" + vid);
+            if (raw) result[vid] = JSON.parse(raw);
+          } catch (e) {}
+        }
+        return new Response(JSON.stringify({ visitors, messages: result }), {
           headers: { "Content-Type": "application/json", ...corsHeaders },
         });
       }

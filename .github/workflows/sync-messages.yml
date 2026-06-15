@@ -1,0 +1,27 @@
+name: Sync Chat Messages
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch messages from worker
+        run: |
+          curl -s -H "Authorization: Bearer ${{ secrets.ADMIN_KEY }}" \
+            "https://telegram-chat.timtest1987.workers.dev/api/admin/sync" \
+            -o messages.json
+      - name: Commit and push
+        run: |
+          git config user.name "sync-bot"
+          git config user.email "bot@technadzorkazan.ru"
+          git add messages.json
+          git diff --quiet && git diff --staged --quiet || git commit -m "sync: update chat messages"
+          git push
