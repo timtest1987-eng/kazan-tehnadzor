@@ -1754,31 +1754,35 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
 
   function poll() {
     if (pollPaused) return;
-    fetch('https://telegram-chat.timtest1987.workers.dev/api/messages?visitorId=' + vid)
-      .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-      .then(function(d) {
-        if (!d || !d.messages) return;
-        var msgs = d.messages;
-        if (!lastMsgCount) lastMsgCount = 0;
-        if (msgs.length <= lastMsgCount) return;
-        for (var i = lastMsgCount; i < msgs.length; i++) {
-          if (msgs[i].role === 'operator') {
-            addMsg(msgs[i].name || 'Скрепыч', msgs[i].message, 'bot');
-            if (noReplyTimer) { clearTimeout(noReplyTimer); noReplyTimer = null; }
+    var x = new XMLHttpRequest();
+    x.open('POST', 'https://api.vk.com/method/messages.getHistory', true);
+    x.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    x.onload = function() {
+      try {
+        var d = JSON.parse(x.responseText);
+        if (!d || !d.response || !d.response.items) { pollFailCount = 0; return; }
+        for (var j = 0; j < d.response.items.length; j++) {
+          var item = d.response.items[j];
+          if (item.from_id == 1020120 && item.reply_message) {
+            var rt = item.reply_message.text || '';
+            if (rt.indexOf('[' + vid + ']') !== -1) {
+              var ts = item.date * 1000;
+              if (ts > lastMsgCount) {
+                addMsg('Скрепыч', item.text || '', 'bot');
+                lastMsgCount = ts;
+                if (noReplyTimer) { clearTimeout(noReplyTimer); noReplyTimer = null; }
+              }
+            }
           }
         }
-        lastMsgCount = msgs.length;
         pollFailCount = 0;
-      })
-      .catch(function(err) {
-        pollFailCount++;
-        console.error('[Чат] Poll error #' + pollFailCount + ':', err.message);
-        if (pollFailCount > 20) {
-          clearInterval(pollTimer);
-          pollTimer = null;
-          pollPaused = true;
-        }
-      });
+      } catch(e) { pollFailCount++; if (pollFailCount > 20) { clearInterval(pollTimer); pollTimer = null; pollPaused = true; } }
+    };
+    x.onerror = function() {
+      pollFailCount++;
+      if (pollFailCount > 20) { clearInterval(pollTimer); pollTimer = null; pollPaused = true; }
+    };
+    x.send('access_token=' + encodeURIComponent(vkToken) + '&peer_id=1020120&count=20&v=5.199');
   }
 
   function send() {

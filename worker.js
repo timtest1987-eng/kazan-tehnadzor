@@ -122,7 +122,7 @@ export default {
             await MESSAGES.put("vkck:" + visitorId, String(Date.now()), { expirationTtl: 86400 });
           }
         } catch (e) {}
-        return new Response(JSON.stringify({ messages }), {
+        return new Response(JSON.stringify({ messages, dbg: { ok: true } }), {
           headers: { "Content-Type": "application/json", ...corsHeaders },
         });
       }
@@ -149,6 +149,39 @@ export default {
         return new Response(JSON.stringify({ visitors, messages: result }), {
           headers: { "Content-Type": "application/json", ...corsHeaders },
         });
+      }
+
+      if (path === "/api/debug-vk") {
+        try {
+          const resp = await fetch("https://api.vk.com/method/messages.getHistory?" + new URLSearchParams({
+            access_token: VK_GROUP_TOKEN,
+            peer_id: VK_OPERATOR_ID,
+            count: "20",
+            v: "5.199",
+          }));
+          const data = await resp.json();
+          let reported = "-";
+          if (data.response && data.response.items) {
+            const allVids = [];
+            for (const item of data.response.items) {
+              if (item.reply_message) {
+                const t = item.reply_message.text || "";
+                const m = t.match(/^\[([a-f0-9\-]{36})\]/);
+                allVids.push({ vid: m ? m[1] : "NO_MATCH", from: item.from_id, text: (item.text || "").slice(0,20) });
+              }
+            }
+            reported = JSON.stringify(allVids);
+          }
+          return new Response(JSON.stringify({
+            tokenPrefix: (VK_GROUP_TOKEN || "").slice(0, 10) + "...",
+            items: data.response ? data.response.items.length : 0,
+            matches: reported,
+          }), { headers: { "Content-Type": "application/json", ...corsHeaders } });
+        } catch (e) {
+          return new Response(JSON.stringify({ error: e.message }), {
+            status: 500, headers: { "Content-Type": "application/json", ...corsHeaders },
+          });
+        }
       }
 
       if (path === "/api/vk-webhook" && method === "POST") {
