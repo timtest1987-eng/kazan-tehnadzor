@@ -1,4 +1,4 @@
-</script>
+﻿</script>
 <style>
 .chat-btn {
   position: fixed;
@@ -195,6 +195,43 @@
   .chat-invite { bottom: 110px; right: 8px; }
   .chat-invite-inner { max-width: 200px; font-size: 0.85rem; padding: 10px 16px; }
 }
+
+.acccta {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #FF8C00 0%, #D4A853 100%);
+  color: #1A2B2E;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 0.03em;
+  padding: 18px 10px;
+  border-radius: 0 14px 14px 0;
+  box-shadow: 0 6px 24px rgba(255, 140, 0, 0.45);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  white-space: nowrap;
+  transition: transform 0.25s, box-shadow 0.25s, background 0.25s;
+}
+.acccta:hover {
+  transform: translateY(-50%) translateX(4px);
+  box-shadow: 0 10px 32px rgba(255, 140, 0, 0.6);
+  background: linear-gradient(135deg, #FF7A00 0%, #E0B45C 100%);
+}
+.acccta::after {
+  content: '\2192';
+  font-size: 0.9rem;
+  margin-top: 8px;
+}
+@media (max-width: 768px) {
+  .acccta { font-size: 0.8rem; padding: 12px 6px; border-radius: 0 10px 10px 0; }
+}
+
 </style>
 
 <button class="chat-btn" id="chatBtn" aria-label="Чат">
@@ -215,6 +252,7 @@
   </div>
 </div>
 
+<a class="acccta" href="#">Ведем от РНС до ЗОС</a>
 <div class="chat-widget" id="chatWidget">
   <div class="chat-header">
     <div class="chat-logo-wrap">
