@@ -203,21 +203,27 @@
   transform: translateY(-50%);
   z-index: 900;
   display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   background: linear-gradient(135deg, #FF8C00 0%, #D4A853 100%);
   color: #1A2B2E;
   text-decoration: none;
-  font-weight: 800;
-  font-size: 2.1rem;
-  letter-spacing: 0.03em;
   padding: 38px 21px;
   border-radius: 0 28px 28px 0;
   box-shadow: 0 12px 42px rgba(255, 140, 0, 0.45);
+  transition: transform 0.25s, background 0.25s;
+  animation: acccta-pulse 1.2s ease-in-out infinite;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.acccta-label {
   writing-mode: vertical-rl;
   text-orientation: mixed;
   white-space: nowrap;
-  transition: transform 0.25s, background 0.25s;
-  animation: acccta-pulse 1.2s ease-in-out infinite;
+  font-weight: 800;
+  font-size: 2.1rem;
+  letter-spacing: 0.03em;
 }
 .acccta:hover {
   transform: translateY(-50%) translateX(6px);
@@ -235,7 +241,8 @@
   50% { box-shadow: 0 12px 64px rgba(255, 140, 0, 0.95), 0 0 30px rgba(255, 170, 40, 0.95); }
 }
 @media (max-width: 768px) {
-  .acccta { font-size: 1rem; padding: 17px 8px; border-radius: 0 14px 14px 0; }
+  .acccta { padding: 17px 8px; border-radius: 0 14px 14px 0; }
+  .acccta-label { font-size: 1rem; }
 }
 
 </style>
@@ -258,7 +265,7 @@
   </div>
 </div>
 
-<a class="acccta" href="soprovozhdenie-stroitelstva.html">Ведём от РНС до РНВ</a>
+<a class="acccta" href="soprovozhdenie-stroitelstva.html"><span class="acccta-label">Ведём от РНС до РНВ</span></a>
 <div class="chat-widget" id="chatWidget">
   <div class="chat-header">
     <div class="chat-logo-wrap">
