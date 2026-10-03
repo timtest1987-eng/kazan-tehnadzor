@@ -1,6 +1,15 @@
 User-agent: *
-Disallow: /landing.html
 Allow: /
+Disallow: /admin.html
+Disallow: /register.html
+Disallow: /chat-widget-embed.html
+Disallow: /yandex_cf7ada6adc8151ad.html
+
+# Дубли закрыты через meta noindex + canonical, а не через Disallow,
+# чтобы поисковик успел прочитать canonical:
+# /landing.html   -> /
+# /physical.html  -> /chastnyj-zakazchik.html
+# /legal.html     -> /yurlico.html
 
 Sitemap: https://technadzorkazan.ru/sitemap.xml
 
