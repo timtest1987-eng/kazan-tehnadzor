@@ -693,6 +693,7 @@
 
 <!-- /Yandex.Metrika counter -->
 
+<link rel="stylesheet" href="modal-presentation.css?v=1">
 </head>
 
 <body>
@@ -1024,55 +1025,13 @@
 
 
 
-<div id="requestModal" class="modal-overlay" onclick="if(event.target===this)closeModal()">
-
-  <div class="modal-content">
-
-    <button class="modal-close" onclick="closeModal()">&times;</button>
-
-    <h3>Оставить заявку</h3>
-
-    <form id="requestForm" onsubmit="sendRequest(event)">
-
-      <input type="text" id="name" placeholder="Ваше имя" required>
-
-      <input type="tel" id="phone" placeholder="+7 (900) 000 00 00" required oninput="formatPhone(this)">
-
-      <input type="email" id="email" placeholder="E-mail" required>
-
-      <textarea id="description" placeholder="Краткое описание задачи" rows="4" required></textarea>
-
-      <button type="submit" id="submitBtn">Отправить</button>
-
-    </form>
-
-    <div id="formStatus" class="form-status"></div>
-
-  </div>
-
-</div>
 
 
 
-<script>
 
-function formatPhone(i){let v=i.value.replace(/\D/g,'');if(v.startsWith('7'))v='+'+v;else if(v.startsWith('8'))v='+7'+v.slice(1);else if(!v.startsWith('+'))v='+7'+v;let r='';if(v.length>0)r=v[0];if(v.length>1)r+=v[1];if(v.length>2)r+=' ('+v.slice(2,5);if(v.length>5)r+=') '+v.slice(5,8);if(v.length>8)r+=' '+v.slice(8,10);if(v.length>10)r+=' '+v.slice(10,12);i.value=r;}
 
-function openModal(){document.getElementById('requestModal').classList.add('active');}
 
-function closeModal(){document.getElementById('requestModal').classList.remove('active');}
-
-setTimeout(function(){if(!sessionStorage.getItem('modalShown')){sessionStorage.setItem('modalShown','1');openModal();}},10000);
-
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
-<script>
-
-try{emailjs.init('-S1e762arpbUov2ic');}catch(e){}
-
-function sendRequest(e){e.preventDefault();const b=document.getElementById('submitBtn'),s=document.getElementById('formStatus');b.disabled=true;b.textContent='Отправка...';try{emailjs.send('service_c2yal7e','template_q3t7rj8',{name:document.getElementById('name').value,phone:document.getElementById('phone').value,email:document.getElementById('email').value,description:document.getElementById('description').value}).then(()=>{s.textContent='Заявка отправлена! Мы свяжемся с вами в ближайшее время.';s.className='form-status';document.getElementById('requestForm').reset();setTimeout(closeModal,2000);}).catch(()=>{s.textContent='Ошибка отправки. Попробуйте позже или напишите на info@technadzorkazan.ru';s.className='form-status error';}).finally(()=>{b.disabled=false;b.textContent='Отправить';});}catch(e){s.textContent='Ошибка отправки. Напишите на info@technadzorkazan.ru';s.className='form-status error';b.disabled=false;b.textContent='Отправить';}\r\n</script>\r\n<style>
+<style>
 .footer-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; text-align: left; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid rgba(248,250,250,0.15); }
 .footer-col { display: flex; flex-direction: column; gap: 8px; }
 .footer-col-t { font-weight: 700; color: #F8FAFA; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.78rem; margin-bottom: 2px; }
@@ -1602,6 +1561,7 @@ function sendRequest(e){e.preventDefault();const b=document.getElementById('subm
 })();
 </script>
 
+<script src="modal-presentation.js?v=1" defer></script>
 </body>
 
 </html>
